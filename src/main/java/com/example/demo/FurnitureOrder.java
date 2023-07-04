@@ -1,6 +1,7 @@
 package com.example.demo;
 
 import java.sql.*;
+import java.util.Objects;
 
 public class FurnitureOrder {
 
@@ -23,44 +24,50 @@ public class FurnitureOrder {
         this.confidentiality_level = 0;
     }
 
-    public static FurnitureOrder insertFurnitureOrder(Connection connection, FurnitureOrder furnitureOrder) throws SQLException {
-        String query = "INSERT INTO furniture_orders (id_of_order, id_of_piece, quantity, confidentiality_level) VALUES (?, ?, ?, ?)";
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setInt(1, furnitureOrder.getId_of_order());
-            statement.setInt(2, furnitureOrder.getId_of_piece());
-            statement.setInt(3, furnitureOrder.getQuantity());
-            statement.setInt(4, furnitureOrder.getConfidentiality_level());
+    public FurnitureOrder insertFurnitureOrder() {
+        String query = "INSERT INTO furniture_orders (id_of_order, id_of_piece, quantity) VALUES (?, ?, ?)";
+        try (PreparedStatement statement = Connector.getConnection().prepareStatement(query)) {
+            statement.setInt(1, getId_of_order());
+            statement.setInt(2, getId_of_piece());
+            statement.setInt(3, getQuantity());
             statement.executeUpdate();
         }
-        return furnitureOrder;
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return this;
     }
 
-    public static FurnitureOrder deleteFurnitureOrder(Connection connection, int id_of_order, int id_of_piece) throws SQLException {
+    public FurnitureOrder deleteFurnitureOrder(int id_of_order, int id_of_piece) {
         String query = "DELETE FROM furniture_orders WHERE id_of_order = ? AND id_of_piece = ?";
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
+        try (PreparedStatement statement = Connector.getConnection().prepareStatement(query)) {
             statement.setInt(1, id_of_order);
             statement.setInt(2, id_of_piece);
             statement.executeUpdate();
         }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
-    public static FurnitureOrder updateFurnitureOrder(Connection connection, FurnitureOrder furnitureOrder) throws SQLException {
-        String query = "UPDATE furniture_orders SET quantity = ?, confidentiality_level = ? WHERE id_of_order = ? AND id_of_piece = ?";
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setInt(1, furnitureOrder.getQuantity());
-            statement.setInt(2, furnitureOrder.getConfidentiality_level());
-            statement.setInt(3, furnitureOrder.getId_of_order());
-            statement.setInt(4, furnitureOrder.getId_of_piece());
-            statement.executeUpdate();
-        }
-        return furnitureOrder;
-    }
+//    public static FurnitureOrder updateFurnitureOrder(Connection connection, FurnitureOrder furnitureOrder) throws SQLException {
+//        String query = "UPDATE furniture_orders SET quantity = ?, confidentiality_level = ? WHERE id_of_order = ? AND id_of_piece = ?";
+//        try (PreparedStatement statement = connection.prepareStatement(query)) {
+//            statement.setInt(1, furnitureOrder.getQuantity());
+//            statement.setInt(2, furnitureOrder.getConfidentiality_level());
+//            statement.setInt(3, furnitureOrder.getId_of_order());
+//            statement.setInt(4, furnitureOrder.getId_of_piece());
+//            statement.executeUpdate();
+//        }
+//        return furnitureOrder;
+//    }
 
-    public static FurnitureOrder[] selectAllFurnitureOrders(Connection connection) throws SQLException {
+    public static FurnitureOrder[] selectAllFurnitureOrders() {
         String query = "SELECT * FROM furniture_orders";
-        try (Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery(query)) {
+        try {
+            PreparedStatement statement = Connector.getConnection().prepareStatement(query);
+            ResultSet resultSet = statement.executeQuery(query);
             ResultSetMetaData metaData = resultSet.getMetaData();
             int columnCount = metaData.getColumnCount();
             FurnitureOrder[] furnitureOrders = new FurnitureOrder[columnCount];
@@ -70,15 +77,20 @@ public class FurnitureOrder {
                 int pieceId = resultSet.getInt("id_of_piece");
                 int quantity = resultSet.getInt("quantity");
                 int level = resultSet.getInt("confidentiality_level");
-                furnitureOrders[index++] = new FurnitureOrder(orderId, pieceId, quantity, level);
+                furnitureOrders[index++] = new FurnitureOrder(Objects.requireNonNull(Order.selectOrderById(orderId)),
+                        Objects.requireNonNull(PieceOfFurniture.selectPieceOfFurnitureById(pieceId)), quantity, level);
             }
             return furnitureOrders;
         }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
-    public static FurnitureOrder selectFurnitureOrderById(Connection connection, int id_of_order, int id_of_piece) throws SQLException {
+    public static FurnitureOrder selectFurnitureOrderById(int id_of_order, int id_of_piece) {
         String query = "SELECT * FROM furniture_orders WHERE id_of_order = ? AND id_of_piece = ?";
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
+        try (PreparedStatement statement = Connector.getConnection().prepareStatement(query)) {
             statement.setInt(1, id_of_order);
             statement.setInt(2, id_of_piece);
             try (ResultSet resultSet = statement.executeQuery()) {
@@ -87,9 +99,14 @@ public class FurnitureOrder {
                     int pieceId = resultSet.getInt("id_of_piece");
                     int quantity = resultSet.getInt("quantity");
                     int level = resultSet.getInt("confidentiality_level");
-                    return new FurnitureOrder(orderId, pieceId, quantity, level);
+                    return new FurnitureOrder(Objects.requireNonNull(Order.selectOrderById(orderId)),
+                            Objects.requireNonNull(PieceOfFurniture.selectPieceOfFurnitureById(pieceId)),
+                            quantity, level);
                 }
             }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
         }
         return null;
     }

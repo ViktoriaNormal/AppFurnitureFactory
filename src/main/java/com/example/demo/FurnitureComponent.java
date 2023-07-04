@@ -1,6 +1,7 @@
 package com.example.demo;
 
 import java.sql.*;
+import java.util.Objects;
 
 public class FurnitureComponent {
 
@@ -20,42 +21,51 @@ public class FurnitureComponent {
         this.confidentiality_level = 0;
     }
 
-    public static FurnitureComponent insertFurnitureComponent(Connection connection, FurnitureComponent furnitureComponent) throws SQLException {
-        String query = "INSERT INTO furniture_components (id_of_piece, id_of_component, confidentiality_level) VALUES (?, ?, ?)";
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setInt(1, furnitureComponent.getId_of_piece());
-            statement.setInt(2, furnitureComponent.getId_of_component());
-            statement.setInt(3, furnitureComponent.getConfidentiality_level());
+    public FurnitureComponent insertFurnitureComponent() {
+        String query = "INSERT INTO furniture_component (id_of_piece, id_of_component) VALUES (?, ?)";
+        try (PreparedStatement statement = Connector.getConnection().prepareStatement(query)) {
+            statement.setInt(1, getId_of_piece());
+            statement.setInt(2, getId_of_component());
             statement.executeUpdate();
         }
-        return furnitureComponent;
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return this;
     }
 
-    public static FurnitureComponent deleteFurnitureComponent(Connection connection, int id_of_piece, int id_of_component) throws SQLException {
-        String query = "DELETE FROM furniture_components WHERE id_of_piece = ? AND id_of_component = ?";
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setInt(1, id_of_piece);
-            statement.setInt(2, id_of_component);
+    public FurnitureComponent deleteFurnitureComponent() {
+        String query = "DELETE FROM furniture_component WHERE id_of_piece = ? AND id_of_component = ?";
+        try (PreparedStatement statement = Connector.getConnection().prepareStatement(query)) {
+            statement.setInt(1, getId_of_piece());
+            statement.setInt(2, getId_of_component());
             statement.executeUpdate();
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
         }
         return null;
     }
 
-    public static FurnitureComponent updateFurnitureComponent(Connection connection, FurnitureComponent furnitureComponent) throws SQLException {
-        String query = "UPDATE furniture_components SET confidentiality_level = ? WHERE id_of_piece = ? AND id_of_component = ?";
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setInt(1, furnitureComponent.getConfidentiality_level());
-            statement.setInt(2, furnitureComponent.getId_of_piece());
-            statement.setInt(3, furnitureComponent.getId_of_component());
-            statement.executeUpdate();
-        }
-        return furnitureComponent;
-    }
+//    public FurnitureComponent updateFurnitureComponentCL(int confidentiality_level) {
+//        String query = "UPDATE furniture_component SET confidentiality_level = ? WHERE id_of_piece = ? AND id_of_component = ?";
+//        try (PreparedStatement statement = Connector.getConnection().prepareStatement(query)) {
+//            statement.setInt(1, confidentiality_level);
+//            statement.setInt(2, getId_of_piece());
+//            statement.setInt(3, getId_of_component());
+//            statement.executeUpdate();
+//        }
+//        catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//        return this;
+//    }
 
-    public static FurnitureComponent[] selectAllFurnitureComponents(Connection connection) throws SQLException {
-        String query = "SELECT * FROM furniture_components";
-        try (Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery(query)) {
+    public static FurnitureComponent[] selectAllFurnitureComponents() {
+        String query = "SELECT * FROM furniture_component";
+        try {
+            PreparedStatement statement = Connector.getConnection().prepareStatement(query);
+            ResultSet resultSet = statement.executeQuery(query);
             ResultSetMetaData metaData = resultSet.getMetaData();
             int columnCount = metaData.getColumnCount();
             FurnitureComponent[] furnitureComponents = new FurnitureComponent[columnCount];
@@ -64,15 +74,21 @@ public class FurnitureComponent {
                 int pieceId = resultSet.getInt("id_of_piece");
                 int componentId = resultSet.getInt("id_of_component");
                 int level = resultSet.getInt("confidentiality_level");
-                furnitureComponents[index++] = new FurnitureComponent(pieceId, componentId, level);
+                furnitureComponents[index++] = new FurnitureComponent(
+                        Objects.requireNonNull(PieceOfFurniture.selectPieceOfFurnitureById(pieceId)),
+                        Objects.requireNonNull(Component.selectComponentById(componentId)), level);
             }
             return furnitureComponents;
         }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
-    public static FurnitureComponent selectFurnitureComponentById(Connection connection, int id_of_piece, int id_of_component) throws SQLException {
-        String query = "SELECT * FROM furniture_components WHERE id_of_piece = ? AND id_of_component = ?";
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
+    public static FurnitureComponent selectFurnitureComponentById(int id_of_piece, int id_of_component) {
+        String query = "SELECT * FROM furniture_component WHERE id_of_piece = ? AND id_of_component = ?";
+        try (PreparedStatement statement = Connector.getConnection().prepareStatement(query)) {
             statement.setInt(1, id_of_piece);
             statement.setInt(2, id_of_component);
             try (ResultSet resultSet = statement.executeQuery()) {
@@ -80,9 +96,13 @@ public class FurnitureComponent {
                     int pieceId = resultSet.getInt("id_of_piece");
                     int componentId = resultSet.getInt("id_of_component");
                     int level = resultSet.getInt("confidentiality_level");
-                    return new FurnitureComponent(pieceId, componentId, level);
+                    return new FurnitureComponent(Objects.requireNonNull(PieceOfFurniture.selectPieceOfFurnitureById(pieceId)),
+                            Objects.requireNonNull(Component.selectComponentById(componentId)), level);
                 }
             }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
         }
         return null;
     }

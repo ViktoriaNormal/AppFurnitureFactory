@@ -26,45 +26,60 @@ public class Component {
         this.confidentiality_level = 0;
     }
 
-    public static Component insertComponent(Connection connection, Component component) throws SQLException {
-        String query = "INSERT INTO components (id_of_component, component_type, manufacturing_price, digital_code, confidentiality_level) VALUES (?, ?, ?, ?, ?)";
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setInt(1, component.getId_of_component());
-            statement.setString(2, component.getComponent_type());
-            statement.setInt(3, component.getManufacturing_price());
-            statement.setInt(4, component.getDigital_code());
-            statement.setInt(5, component.getConfidentiality_level());
+    public Component insertComponent() {
+        String query = "INSERT INTO component (component_type, manufacturing_price, digital_code) VALUES (?, ?, ?)";
+        try (PreparedStatement statement = Connector.getConnection().prepareStatement(query)) {
+            statement.setString(2, getComponent_type());
+            statement.setInt(3, getManufacturing_price());
+            statement.setInt(4, getDigital_code());
             statement.executeUpdate();
         }
-        return component;
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return this;
     }
 
-    public static Component deleteComponent(Connection connection, int id) throws SQLException {
-        String query = "DELETE FROM components WHERE id_of_component = ?";
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setInt(1, id);
+    public Component deleteComponent() {
+        String query = "DELETE FROM component WHERE id_of_component = ?";
+        try (PreparedStatement statement = Connector.getConnection().prepareStatement(query)) {
+            statement.setInt(1, getId_of_component());
             statement.executeUpdate();
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
         }
         return null;
     }
 
-    public static Component updateComponent(Connection connection, Component component) throws SQLException {
-        String query = "UPDATE components SET component_type = ?, manufacturing_price = ?, digital_code = ?, confidentiality_level = ? WHERE id_of_component = ?";
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setString(1, component.getComponent_type());
-            statement.setInt(2, component.getManufacturing_price());
-            statement.setInt(3, component.getDigital_code());
-            statement.setInt(4, component.getConfidentiality_level());
-            statement.setInt(5, component.getId_of_component());
-            statement.executeUpdate();
+    public Component updateComponent(String column_name, Object new_value) {
+        String query = "UPDATE component SET " + column_name + " = " + new_value + " WHERE id_of_component = " + getId_of_component();
+        try (PreparedStatement statement = Connector.getConnection().prepareStatement(query)) {
+            statement.executeUpdate(query);
         }
-        return component;
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            switch (column_name) {
+                case "component_type" -> setComponent_type((String) new_value);
+                case "manufacturing_price" -> setManufacturing_price((int) new_value);
+                case "digital_code" -> setDigital_code((int) new_value);
+            }
+        }
+        catch (Exception e) {
+            System.out.println("Произошла ошибка: " + e.getMessage());
+        }
+
+        return this;
     }
 
-    public static Component[] selectAllComponents(Connection connection) throws SQLException {
-        String query = "SELECT * FROM components";
-        try (Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery(query)) {
+    public static Component[] selectAllComponents() {
+        String query = "SELECT * FROM component";
+        try {
+            PreparedStatement statement = Connector.getConnection().prepareStatement(query);
+            ResultSet resultSet = statement.executeQuery(query);
             ResultSetMetaData metaData = resultSet.getMetaData();
             int columnCount = metaData.getColumnCount();
             Component[] components = new Component[columnCount];
@@ -79,12 +94,16 @@ public class Component {
             }
             return components;
         }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
-    public static Component selectComponentById(Connection connection, int id) throws SQLException {
-        String query = "SELECT * FROM components WHERE id_of_component = ?";
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setInt(1, id);
+    public static Component selectComponentById(int id_of_component) {
+        String query = "SELECT * FROM component WHERE id_of_component = ?";
+        try (PreparedStatement statement = Connector.getConnection().prepareStatement(query)) {
+            statement.setInt(1, id_of_component);
             try (ResultSet resultSet = statement.executeQuery()) {
                 if (resultSet.next()) {
                     int componentId = resultSet.getInt("id_of_component");
@@ -95,6 +114,9 @@ public class Component {
                     return new Component(componentId, type, price, code, level);
                 }
             }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
         }
         return null;
     }

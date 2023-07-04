@@ -2,6 +2,7 @@ package com.example.demo;
 
 import java.sql.Date;
 import java.sql.*;
+import java.util.Objects;
 
 public class Order {
     private int id_of_order;
@@ -26,45 +27,60 @@ public class Order {
         this.confidentiality_level = 0;
     }
 
-    public static Order insertOrder(Connection connection, Order order) throws SQLException {
-        String query = "INSERT INTO orders (id_of_order, id_of_shop, date_of_order, number_of_order, confidentiality_level) VALUES (?, ?, ?, ?, ?)";
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setInt(1, order.getId_of_order());
-            statement.setInt(2, order.getId_of_shop());
-            statement.setDate(3, order.getDate_of_order());
-            statement.setInt(4, order.getNumber_of_order());
-            statement.setInt(5, order.getConfidentiality_level());
+    public Order insertOrder() {
+        String query = "INSERT INTO orders (id_of_shop, date_of_order, number_of_order) VALUES (?, ?, ?)";
+        try (PreparedStatement statement = Connector.getConnection().prepareStatement(query)) {
+            statement.setInt(2, getId_of_shop());
+            statement.setDate(3, getDate_of_order());
+            statement.setInt(4, getNumber_of_order());
             statement.executeUpdate();
         }
-        return order;
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return this;
     }
 
-    public static Order deleteOrder(Connection connection, int id_of_order) throws SQLException {
+    public Order deleteOrder() {
         String query = "DELETE FROM orders WHERE id_of_order = ?";
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setInt(1, id_of_order);
+        try (PreparedStatement statement = Connector.getConnection().prepareStatement(query)) {
+            statement.setInt(1, getId_of_order());
             statement.executeUpdate();
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
         }
         return null;
     }
 
-    public static Order updateOrder(Connection connection, Order order) throws SQLException {
-        String query = "UPDATE orders SET id_of_shop = ?, date_of_order = ?, number_of_order = ?, confidentiality_level = ? WHERE id_of_order = ?";
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setInt(1, order.getId_of_shop());
-            statement.setDate(2, order.getDate_of_order());
-            statement.setInt(3, order.getNumber_of_order());
-            statement.setInt(4, order.getConfidentiality_level());
-            statement.setInt(5, order.getId_of_order());
-            statement.executeUpdate();
+    public Order updateOrder(String column_name, Object new_value) {
+        String query = "UPDATE orders SET " + column_name + " = " + new_value + " WHERE id_of_order = " + getId_of_order();
+        try (PreparedStatement statement = Connector.getConnection().prepareStatement(query)) {
+            statement.executeUpdate(query);
         }
-        return order;
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            switch (column_name) {
+                case "id_of_shop" -> setId_of_shop(Objects.requireNonNull(Shop.selectShopById((int) new_value)));
+                case "date_of_order" -> setDate_of_order((Date) new_value);
+                case "number_of_order" -> setNumber_of_order((int) new_value);
+            }
+        }
+        catch (Exception e) {
+            System.out.println("Произошла ошибка: " + e.getMessage());
+        }
+
+        return this;
     }
 
-    public static Order[] selectAllOrders(Connection connection) throws SQLException {
+    public static Order[] selectAllOrders() {
         String query = "SELECT * FROM orders";
-        try (Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery(query)) {
+        try {
+            PreparedStatement statement = Connector.getConnection().prepareStatement(query);
+            ResultSet resultSet = statement.executeQuery(query);
             ResultSetMetaData metaData = resultSet.getMetaData();
             int columnCount = metaData.getColumnCount();
             Order[] orders = new Order[columnCount];
@@ -75,15 +91,20 @@ public class Order {
                 Date date = resultSet.getDate("date_of_order");
                 int number = resultSet.getInt("number_of_order");
                 int level = resultSet.getInt("confidentiality_level");
-                orders[index++] = new Order(idOrder, idShop, date, number, level);
+                orders[index++] = new Order(idOrder, Objects.requireNonNull(Shop.selectShopById(idShop)), date, number,
+                        level);
             }
             return orders;
         }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
-    public static Order selectOrderById(Connection connection, int id_of_order) throws SQLException {
+    public static Order selectOrderById(int id_of_order) {
         String query = "SELECT * FROM orders WHERE id_of_order = ?";
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
+        try (PreparedStatement statement = Connector.getConnection().prepareStatement(query)) {
             statement.setInt(1, id_of_order);
             try (ResultSet resultSet = statement.executeQuery()) {
                 if (resultSet.next()) {
@@ -92,9 +113,12 @@ public class Order {
                     Date date = resultSet.getDate("date_of_order");
                     int number = resultSet.getInt("number_of_order");
                     int level = resultSet.getInt("confidentiality_level");
-                    return new Order(idOrder, idShop, date, number, level);
+                    return new Order(idOrder, Objects.requireNonNull(Shop.selectShopById(idShop)), date, number, level);
                 }
             }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
         }
         return null;
     }

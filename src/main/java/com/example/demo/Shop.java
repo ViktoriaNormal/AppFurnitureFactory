@@ -23,43 +23,58 @@ public class Shop {
         this.confidentiality_level = 0;
     }
 
-    public static Shop insertShop(Connection connection, Shop shop) throws SQLException {
-        String query = "INSERT INTO shops (id_of_shop, address, fax_number, confidentiality_level) VALUES (?, ?, ?, ?)";
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setInt(1, shop.getId_of_shop());
-            statement.setString(2, shop.getAddress());
-            statement.setInt(3, shop.getFax_number());
-            statement.setInt(4, shop.getConfidentiality_level());
+    public Shop insertShop() {
+        String query = "INSERT INTO shop (address, fax_number) VALUES (?, ?)";
+        try (PreparedStatement statement = Connector.getConnection().prepareStatement(query)) {
+            statement.setString(2, getAddress());
+            statement.setInt(3, getFax_number());
             statement.executeUpdate();
         }
-        return shop;
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return this;
     }
 
-    public static Shop deleteShop(Connection connection, int id_of_shop) throws SQLException {
-        String query = "DELETE FROM shops WHERE id_of_shop = ?";
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setInt(1, id_of_shop);
+    public Shop deleteShop() {
+        String query = "DELETE FROM shop WHERE id_of_shop = ?";
+        try (PreparedStatement statement = Connector.getConnection().prepareStatement(query)) {
+            statement.setInt(1, getId_of_shop());
             statement.executeUpdate();
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
         }
         return null;
     }
 
-    public static Shop updateShop(Connection connection, Shop shop) throws SQLException {
-        String query = "UPDATE shops SET address = ?, fax_number = ?, confidentiality_level = ? WHERE id_of_shop = ?";
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setString(1, shop.getAddress());
-            statement.setInt(2, shop.getFax_number());
-            statement.setInt(3, shop.getConfidentiality_level());
-            statement.setInt(4, shop.getId_of_shop());
-            statement.executeUpdate();
+    public Shop updateShop(String column_name, Object new_value) {
+        String query = "UPDATE shop SET " + column_name + " = " + new_value + " WHERE id_of_shop = " + getId_of_shop();
+        try (PreparedStatement statement = Connector.getConnection().prepareStatement(query)) {
+            statement.executeUpdate(query);
         }
-        return shop;
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            switch (column_name) {
+                case "address" -> setAddress((String) new_value);
+                case "fax_number" -> setFax_number((int) new_value);
+            }
+        }
+        catch (Exception e) {
+            System.out.println("Произошла ошибка: " + e.getMessage());
+        }
+
+        return this;
     }
 
-    public static Shop[] selectAllShops(Connection connection) throws SQLException {
-        String query = "SELECT * FROM shops";
-        try (Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery(query)) {
+    public static Shop[] selectAllShops() {
+        String query = "SELECT * FROM shop";
+        try {
+            PreparedStatement statement = Connector.getConnection().prepareStatement(query);
+            ResultSet resultSet = statement.executeQuery(query);
             ResultSetMetaData metaData = resultSet.getMetaData();
             int columnCount = metaData.getColumnCount();
             Shop[] shops = new Shop[columnCount];
@@ -73,11 +88,15 @@ public class Shop {
             }
             return shops;
         }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
-    public static Shop selectShopById(Connection connection, int id_of_shop) throws SQLException {
+    public static Shop selectShopById(int id_of_shop) {
         String query = "SELECT * FROM shops WHERE id_of_shop = ?";
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
+        try (PreparedStatement statement = Connector.getConnection().prepareStatement(query)) {
             statement.setInt(1, id_of_shop);
             try (ResultSet resultSet = statement.executeQuery()) {
                 if (resultSet.next()) {
@@ -88,6 +107,9 @@ public class Shop {
                     return new Shop(idShop, address, faxNumber, level);
                 }
             }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
         }
         return null;
     }

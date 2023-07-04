@@ -1,6 +1,7 @@
 package com.example.demo;
 
 import java.sql.*;
+import java.util.Objects;
 
 public class PieceOfFurniture {
 
@@ -30,47 +31,62 @@ public class PieceOfFurniture {
         this.confidentiality_level = 0;
     }
 
-    public static PieceOfFurniture insertPieceOfFurniture(Connection connection, PieceOfFurniture pieceOfFurniture) throws SQLException {
-        String query = "INSERT INTO pieces_of_furniture (id_of_piece, piece_type, article_number, price, id_line, confidentiality_level) VALUES (?, ?, ?, ?, ?, ?)";
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setInt(1, pieceOfFurniture.getId_of_piece());
-            statement.setString(2, pieceOfFurniture.getPiece_type());
-            statement.setInt(3, pieceOfFurniture.getArticle_number());
-            statement.setInt(4, pieceOfFurniture.getPrice());
-            statement.setInt(5, pieceOfFurniture.getId_line());
-            statement.setInt(6, pieceOfFurniture.getConfidentiality_level());
+    public PieceOfFurniture insertPieceOfFurniture() {
+        String query = "INSERT INTO piece_of_furniture (piece_type, article_number, price, id_line) VALUES (?, ?, ?, ?)";
+        try (PreparedStatement statement = Connector.getConnection().prepareStatement(query)) {
+            statement.setString(2, getPiece_type());
+            statement.setInt(3, getArticle_number());
+            statement.setInt(4, getPrice());
+            statement.setInt(5, getId_line());
             statement.executeUpdate();
         }
-        return pieceOfFurniture;
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return this;
     }
 
-    public static PieceOfFurniture deletePieceOfFurniture(Connection connection, int id_of_piece) throws SQLException {
-        String query = "DELETE FROM pieces_of_furniture WHERE id_of_piece = ?";
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setInt(1, id_of_piece);
+    public PieceOfFurniture deletePieceOfFurniture() {
+        String query = "DELETE FROM piece_of_furniture WHERE id_of_piece = ?";
+        try (PreparedStatement statement = Connector.getConnection().prepareStatement(query)) {
+            statement.setInt(1, getId_of_piece());
             statement.executeUpdate();
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
         }
         return null;
     }
 
-    public static PieceOfFurniture updatePieceOfFurniture(Connection connection, PieceOfFurniture pieceOfFurniture) throws SQLException {
-        String query = "UPDATE pieces_of_furniture SET piece_type = ?, article_number = ?, price = ?, id_line = ?, confidentiality_level = ? WHERE id_of_piece = ?";
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setString(1, pieceOfFurniture.getPiece_type());
-            statement.setInt(2, pieceOfFurniture.getArticle_number());
-            statement.setInt(3, pieceOfFurniture.getPrice());
-            statement.setInt(4, pieceOfFurniture.getId_line());
-            statement.setInt(5, pieceOfFurniture.getConfidentiality_level());
-            statement.setInt(6, pieceOfFurniture.getId_of_piece());
-            statement.executeUpdate();
+    public PieceOfFurniture updatePieceOfFurniture(String column_name, Object new_value) {
+        String query = "UPDATE piece_of_furniture SET " + column_name + " = " + new_value + " WHERE id_of_piece = " + getId_of_piece();
+        try (PreparedStatement statement = Connector.getConnection().prepareStatement(query)) {
+            statement.executeUpdate(query);
         }
-        return pieceOfFurniture;
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            switch (column_name) {
+                case "piece_type" -> setPiece_type((String) new_value);
+                case "article_number" -> setArticle_number((int) new_value);
+                case "price" -> setPrice((int) new_value);
+                case "id_line" -> setId_line(Objects.requireNonNull(LineOfFurniture.selectLineOfFurnitureById((int) new_value)));
+            }
+        }
+        catch (Exception e) {
+            System.out.println("Произошла ошибка: " + e.getMessage());
+        }
+
+        return this;
     }
 
-    public static PieceOfFurniture[] selectAllPiecesOfFurniture(Connection connection) throws SQLException {
-        String query = "SELECT * FROM pieces_of_furniture";
-        try (Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery(query)) {
+    public static PieceOfFurniture[] selectAllPiecesOfFurniture() {
+        String query = "SELECT * FROM piece_of_furniture";
+        try {
+            PreparedStatement statement = Connector.getConnection().prepareStatement(query);
+            ResultSet resultSet = statement.executeQuery(query);
             ResultSetMetaData metaData = resultSet.getMetaData();
             int columnCount = metaData.getColumnCount();
             PieceOfFurniture[] piecesOfFurniture = new PieceOfFurniture[columnCount];
@@ -82,15 +98,20 @@ public class PieceOfFurniture {
                 int price = resultSet.getInt("price");
                 int idLine = resultSet.getInt("id_line");
                 int level = resultSet.getInt("confidentiality_level");
-                piecesOfFurniture[index++] = new PieceOfFurniture(idPiece, pieceType, articleNumber, price, idLine, level);
+                piecesOfFurniture[index++] = new PieceOfFurniture(idPiece, pieceType, articleNumber, price,
+                        Objects.requireNonNull(LineOfFurniture.selectLineOfFurnitureById(idLine)), level);
             }
             return piecesOfFurniture;
         }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
-    public static PieceOfFurniture selectPieceOfFurnitureById(Connection connection, int id_of_piece) throws SQLException {
-        String query = "SELECT * FROM pieces_of_furniture WHERE id_of_piece = ?";
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
+    public static PieceOfFurniture selectPieceOfFurnitureById(int id_of_piece) {
+        String query = "SELECT * FROM piece_of_furniture WHERE id_of_piece = ?";
+        try (PreparedStatement statement = Connector.getConnection().prepareStatement(query)) {
             statement.setInt(1, id_of_piece);
             try (ResultSet resultSet = statement.executeQuery()) {
                 if (resultSet.next()) {
@@ -100,9 +121,13 @@ public class PieceOfFurniture {
                     int price = resultSet.getInt("price");
                     int idLine = resultSet.getInt("id_line");
                     int level = resultSet.getInt("confidentiality_level");
-                    return new PieceOfFurniture(idPiece, pieceType, articleNumber, price, idLine, level);
+                    return new PieceOfFurniture(idPiece, pieceType, articleNumber, price,
+                            Objects.requireNonNull(LineOfFurniture.selectLineOfFurnitureById(idLine)), level);
                 }
             }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
         }
         return null;
     }
