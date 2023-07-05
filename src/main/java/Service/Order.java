@@ -1,5 +1,8 @@
 package Service;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 import java.sql.Date;
 import java.sql.*;
 import java.util.ArrayList;
@@ -104,11 +107,11 @@ public class Order {
 //        return null;
 //    }
 
-    public static List<Order> selectAllOrders() {
+    public static ObservableList<Order> selectAllOrders() {
         String query = "SELECT * FROM orders";
         try (PreparedStatement statement = Connector.getConnection().prepareStatement(query)) {
             ResultSet resultSet = statement.executeQuery();
-            List<Order> orders = new ArrayList<>();
+            ObservableList<Order> orders = FXCollections.observableArrayList();
             while (resultSet.next()) {
                 int idOrder = resultSet.getInt("id_of_order");
                 int idShop = resultSet.getInt("id_of_shop");

@@ -1,5 +1,8 @@
 package Service;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -63,36 +66,11 @@ public class FurnitureComponent {
 //        return this;
 //    }
 
-//    public static FurnitureComponent[] selectAllFurnitureComponents() {
-//        String query = "SELECT * FROM furniture_component";
-//        try {
-//            PreparedStatement statement = Connector.getConnection().prepareStatement(query);
-//            ResultSet resultSet = statement.executeQuery(query);
-//            ResultSetMetaData metaData = resultSet.getMetaData();
-//            int columnCount = metaData.getColumnCount();
-//            FurnitureComponent[] furnitureComponents = new FurnitureComponent[columnCount];
-//            int index = 0;
-//            while (resultSet.next()) {
-//                int pieceId = resultSet.getInt("id_of_piece");
-//                int componentId = resultSet.getInt("id_of_component");
-//                int level = resultSet.getInt("confidentiality_level");
-//                furnitureComponents[index++] = new FurnitureComponent(
-//                        Objects.requireNonNull(PieceOfFurniture.selectPieceOfFurnitureById(pieceId)),
-//                        Objects.requireNonNull(Component.selectComponentById(componentId)), level);
-//            }
-//            return furnitureComponents;
-//        }
-//        catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//        return null;
-//    }
-
-    public static List<FurnitureComponent> selectAllFurnitureComponents() {
+    public static ObservableList<FurnitureComponent> selectAllFurnitureComponents() {
         String query = "SELECT * FROM furniture_component";
         try (PreparedStatement statement = Connector.getConnection().prepareStatement(query)) {
             ResultSet resultSet = statement.executeQuery();
-            List<FurnitureComponent> furnitureComponents = new ArrayList<>();
+            ObservableList<FurnitureComponent> furnitureComponents = FXCollections.observableArrayList();
             while (resultSet.next()) {
                 int pieceId = resultSet.getInt("id_of_piece");
                 int componentId = resultSet.getInt("id_of_component");

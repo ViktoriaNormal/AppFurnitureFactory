@@ -2,14 +2,23 @@ package Controller;
 
 
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.ResourceBundle;
 
+import Animation.Animation;
+import Service.Connector;
+import Service.User;
 import com.example.demo.HelloApplication;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.paint.Paint;
+import javafx.scene.shape.Shape;
 
 public class Authorization {
 
@@ -33,6 +42,8 @@ public class Authorization {
 
     @FXML
     private TextField username;
+    @FXML
+    private Label error;
 
     @FXML
     void close(ActionEvent event) {
@@ -41,7 +52,30 @@ public class Authorization {
 
     @FXML
     void signin(ActionEvent event) {
-        HelloApplication.changeScene("/Viewer/TableLines.fxml");
+        try {
+            Animation animationPassword = new Animation(password);
+            Animation animationUsername = new Animation(username);
+
+            String userName = username.getText();
+            String hashPassword = User.makeMD5(password.getText());
+            String query = "SELECT * FROM users WHERE username = ? AND password = ?";
+            PreparedStatement statement = Connector.getConnection().prepareStatement(query);
+
+            statement.setString(1, userName);
+            statement.setString(2, hashPassword);
+            ResultSet result = statement.executeQuery();
+            if (result.next()) {
+                HelloApplication.changeScene("/Viewer/TableLines.fxml");
+            }
+            else {
+                animationPassword.playAnimation();
+                animationUsername.playAnimation();
+            }
+
+            Connector.breakConnection();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML

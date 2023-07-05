@@ -1,5 +1,8 @@
 package Service;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -111,11 +114,11 @@ public class PieceOfFurniture {
 //        return null;
 //    }
 
-    public static List<PieceOfFurniture> selectAllPiecesOfFurniture() {
+    public static ObservableList<PieceOfFurniture> selectAllPiecesOfFurniture() {
         String query = "SELECT * FROM piece_of_furniture";
         try (PreparedStatement statement = Connector.getConnection().prepareStatement(query)) {
             ResultSet resultSet = statement.executeQuery();
-            List<PieceOfFurniture> piecesOfFurniture = new ArrayList<>();
+            ObservableList<PieceOfFurniture> piecesOfFurniture = FXCollections.observableArrayList();
             while (resultSet.next()) {
                 int idPiece = resultSet.getInt("id_of_piece");
                 String pieceType = resultSet.getString("piece_type");

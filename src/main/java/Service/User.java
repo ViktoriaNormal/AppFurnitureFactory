@@ -1,5 +1,12 @@
 package Service;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -98,11 +105,11 @@ public class User {
 //        return null;
 //    }
 
-    public static List<User> selectAllUsers() {
+    public static ObservableList<User> selectAllUsers() {
         String query = "SELECT * FROM users";
         try (PreparedStatement statement = Connector.getConnection().prepareStatement(query)) {
             ResultSet resultSet = statement.executeQuery();
-            List<User> users = new ArrayList<>();
+            ObservableList<User> users = FXCollections.observableArrayList();
             while (resultSet.next()) {
                 int idUser = resultSet.getInt("id_user");
                 String username = resultSet.getString("username");
@@ -135,6 +142,50 @@ public class User {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public static User userLogin(String username, String password) throws SQLException, NoSuchAlgorithmException, InvalidKeySpecException {
+        if(!username.matches("[A-Za-z0-9]+") || !password.matches("[A-Za-z0-9]+")) return null;
+        Statement statement = Connector.getConnection().createStatement();
+        String query = "SELECT * FROM users WHERE username = '" + username + "' AND password = '" + makeMD5(password) + "';";
+        ResultSet result = statement.executeQuery(query);
+        if(!result.next()) return null;
+        return new User(result.getInt("id_user"), result.getString("username"), result.getString("password"),
+                result.getInt("availability_level"));
+    }
+
+    public static User selectUserByUNP(String userName, String Password) {
+        String query = "SELECT * FROM users WHERE username = ? AND password = ?";
+        try (PreparedStatement statement = Connector.getConnection().prepareStatement(query)) {
+            statement.setString(1, userName);
+            statement.setString(2, Password);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    int idUser = resultSet.getInt("id_user");
+                    String username = resultSet.getString("username");
+                    String password = resultSet.getString("password");
+                    int level = resultSet.getInt("availability_level");
+                    return new User(idUser, username, password, level);
+                }
+            }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static String makeMD5(String password) {
+        MessageDigest messageDigest;
+        try {
+            messageDigest = MessageDigest.getInstance("MD5");
+            messageDigest.update(password.getBytes());
+            String pwd = new BigInteger(1, messageDigest.digest()).toString(16);
+            return pwd.toUpperCase();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return password;
     }
 
     //метод отвечающий за доступ пользователя к таблицам
