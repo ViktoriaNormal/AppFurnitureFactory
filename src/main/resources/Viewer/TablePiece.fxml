@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Font?>
+
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.TablePiece">
+   <children>
+      <AnchorPane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #ffffff;">
+         <children>
+            <AnchorPane prefHeight="500.0" prefWidth="235.0" style="-fx-background-color: #125660;">
+               <children>
+                  <Label layoutX="62.0" layoutY="102.0" text="Welcome" textFill="WHITE">
+                     <font>
+                        <Font name="Tahoma Bold" size="24.0" />
+                     </font>
+                  </Label>
+                  <Line endX="100.0" layoutX="118.0" layoutY="79.0" startX="-100.0" stroke="WHITE" />
+                  <Line endX="100.0" layoutX="117.0" layoutY="150.0" startX="-100.0" stroke="WHITE" />
+                  <Button fx:id="line" layoutX="27.0" layoutY="209.0" mnemonicParsing="false" onAction="#toline" prefHeight="30.0" prefWidth="180.0" style="-fx-background-color: #ffffff;" text="Lines of furniture" textFill="#125660">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Button>
+                  <Button fx:id="piece" layoutX="28.0" layoutY="250.0" mnemonicParsing="false" onAction="#topiece" prefHeight="30.0" prefWidth="180.0" style="-fx-background-color: #ffffff;" text="Pieces of furniture" textFill="#125660">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Button>
+                  <Button fx:id="component" layoutX="28.0" layoutY="290.0" mnemonicParsing="false" onAction="#tocomponent" prefHeight="30.0" prefWidth="180.0" style="-fx-background-color: #ffffff;" text="Components of furniture" textFill="#125660">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Button>
+                  <Button fx:id="shop" layoutX="28.0" layoutY="330.0" mnemonicParsing="false" onAction="#toshop" prefHeight="30.0" prefWidth="180.0" style="-fx-background-color: #ffffff;" text="Shops" textFill="#125660">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Button>
+                  <Button fx:id="order" layoutX="28.0" layoutY="368.0" mnemonicParsing="false" onAction="#toorder" prefHeight="30.0" prefWidth="180.0" style="-fx-background-color: #ffffff;" text="Orders" textFill="#125660">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Button>
+                  <Button fx:id="user" layoutX="28.0" layoutY="407.0" mnemonicParsing="false" onAction="#touser" prefHeight="30.0" prefWidth="180.0" style="-fx-background-color: #ffffff;" text="Users" textFill="#125660">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Button>
+               </children>
+            </AnchorPane>
+            <AnchorPane layoutX="-2.0" prefHeight="74.0" prefWidth="808.0" style="-fx-background-color: #125660;">
+               <children>
+                  <Label layoutX="21.0" layoutY="19.0" text="Furniture factory" textFill="WHITE">
+                     <font>
+                        <Font name="Tahoma" size="28.0" />
+                     </font>
+                  </Label>
+                  <Button fx:id="close" layoutX="728.0" layoutY="24.0" mnemonicParsing="false" onAction="#close" style="-fx-background-color: #ffffff;" text="Close" textFill="#125660" AnchorPane.rightAnchor="2.0" AnchorPane.topAnchor="2.0" />
+                  <Button fx:id="profile" layoutX="706.0" layoutY="1.0" mnemonicParsing="false" onAction="#toprofile" style="-fx-background-color: #ffffff;" text="Profile" textFill="#125660" AnchorPane.topAnchor="2.0" />
+               </children>
+            </AnchorPane>
+            <TableView layoutX="235.0" layoutY="74.0" prefHeight="200.0" prefWidth="570.0">
+               <columns>
+                  <TableColumn fx:id="id_of_piece" text="id_of_piece" />
+                  <TableColumn fx:id="piece_type" prefWidth="90.0" text="piece_type" />
+                  <TableColumn fx:id="article_number" prefWidth="90.0" text="article_number" />
+                  <TableColumn fx:id="price" prefWidth="90.0" text="price" />
+                  <TableColumn fx:id="id_line" prefWidth="90.0" text="id_line" />
+                  <TableColumn fx:id="confidentiality_level" prefWidth="90.0" text="confidentiality_level" />
+               </columns>
+            </TableView>
+            <Label layoutX="253.0" layoutY="291.0" text="Pieces of furniture" textFill="#125660">
+               <font>
+                  <Font name="Tahoma" size="17.0" />
+               </font>
+            </Label>
+            <Button fx:id="insert" layoutX="253.0" layoutY="460.0" mnemonicParsing="false" onAction="#insert" prefWidth="100.0" style="-fx-background-color: #125660;" text="Insert" textFill="WHITE" />
+            <Button fx:id="update" layoutX="367.0" layoutY="460.0" mnemonicParsing="false" onAction="#update" prefWidth="100.0" style="-fx-background-color: #125660;" text="Update" textFill="WHITE" />
+            <Button fx:id="delete" layoutX="615.0" layoutY="460.0" mnemonicParsing="false" onAction="#delete" prefWidth="100.0" style="-fx-background-color: #125660;" text="Delete" textFill="WHITE" />
+            <TextField fx:id="piece_typefield" layoutX="253.0" layoutY="337.0" prefWidth="100.0" promptText="piece_type" />
+            <TextField fx:id="article_number" layoutX="253.0" layoutY="369.0" prefWidth="100.0" promptText="article_number" />
+            <TextField fx:id="id_of_piecetodelete" layoutX="727.0" layoutY="460.0" prefWidth="50.0" promptText="id_of_piece" />
+            <TextField fx:id="price" layoutX="253.0" layoutY="402.0" prefWidth="100.0" promptText="price" />
+            <TextField fx:id="id_line" layoutX="367.0" layoutY="337.0" prefWidth="100.0" promptText="id_line" />
+            <TextField fx:id="confidentiality_level" layoutX="367.0" layoutY="369.0" prefWidth="100.0" promptText="confidentiality_level" />
+            <Button fx:id="addcomponent" layoutX="537.0" layoutY="369.0" mnemonicParsing="false" onAction="#addcomponent" style="-fx-background-color: #125660;" text="Add component to piece of furniture" textFill="WHITE" />
+            <Label layoutX="537.0" layoutY="313.0" text="Assign a component to a piece of furniture" textFill="#125660">
+               <font>
+                  <Font name="Tahoma Bold" size="12.0" />
+               </font>
+            </Label>
+            <TextField layoutX="537.0" layoutY="337.0" onAction="#id_of_component" promptText="id_of_component" />
+         </children>
+      </AnchorPane>
+   </children>
+</StackPane>

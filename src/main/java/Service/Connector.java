@@ -1,4 +1,4 @@
-package com.example.demo;
+package Service;
 
 import java.sql.*;
 
@@ -6,6 +6,9 @@ public class Connector {
     private static Connection _database_connection;
 
     private Connector() {
+    }
+
+    public static synchronized Connection getConnection() {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             _database_connection = DriverManager.getConnection("jdbc:mysql://std-mysql.ist.mospolytech.ru:3306/std_2293_furniture_factory",
@@ -20,9 +23,6 @@ public class Connector {
         catch (SQLException e) {
             System.out.println("При попытке соединения с базой данных произошла ошибка: " + e.getMessage());
         }
-    }
-
-    public static synchronized Connection getConnection() {
         return _database_connection;
     }
 

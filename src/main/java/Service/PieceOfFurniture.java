@@ -1,6 +1,8 @@
-package com.example.demo;
+package Service;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class PieceOfFurniture {
@@ -82,15 +84,38 @@ public class PieceOfFurniture {
         return this;
     }
 
-    public static PieceOfFurniture[] selectAllPiecesOfFurniture() {
+//    public static PieceOfFurniture[] selectAllPiecesOfFurniture() {
+//        String query = "SELECT * FROM piece_of_furniture";
+//        try {
+//            PreparedStatement statement = Connector.getConnection().prepareStatement(query);
+//            ResultSet resultSet = statement.executeQuery(query);
+//            ResultSetMetaData metaData = resultSet.getMetaData();
+//            int columnCount = metaData.getColumnCount();
+//            PieceOfFurniture[] piecesOfFurniture = new PieceOfFurniture[columnCount];
+//            int index = 0;
+//            while (resultSet.next()) {
+//                int idPiece = resultSet.getInt("id_of_piece");
+//                String pieceType = resultSet.getString("piece_type");
+//                int articleNumber = resultSet.getInt("article_number");
+//                int price = resultSet.getInt("price");
+//                int idLine = resultSet.getInt("id_line");
+//                int level = resultSet.getInt("confidentiality_level");
+//                piecesOfFurniture[index++] = new PieceOfFurniture(idPiece, pieceType, articleNumber, price,
+//                        Objects.requireNonNull(LineOfFurniture.selectLineOfFurnitureById(idLine)), level);
+//            }
+//            return piecesOfFurniture;
+//        }
+//        catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//        return null;
+//    }
+
+    public static List<PieceOfFurniture> selectAllPiecesOfFurniture() {
         String query = "SELECT * FROM piece_of_furniture";
-        try {
-            PreparedStatement statement = Connector.getConnection().prepareStatement(query);
-            ResultSet resultSet = statement.executeQuery(query);
-            ResultSetMetaData metaData = resultSet.getMetaData();
-            int columnCount = metaData.getColumnCount();
-            PieceOfFurniture[] piecesOfFurniture = new PieceOfFurniture[columnCount];
-            int index = 0;
+        try (PreparedStatement statement = Connector.getConnection().prepareStatement(query)) {
+            ResultSet resultSet = statement.executeQuery();
+            List<PieceOfFurniture> piecesOfFurniture = new ArrayList<>();
             while (resultSet.next()) {
                 int idPiece = resultSet.getInt("id_of_piece");
                 String pieceType = resultSet.getString("piece_type");
@@ -98,12 +123,11 @@ public class PieceOfFurniture {
                 int price = resultSet.getInt("price");
                 int idLine = resultSet.getInt("id_line");
                 int level = resultSet.getInt("confidentiality_level");
-                piecesOfFurniture[index++] = new PieceOfFurniture(idPiece, pieceType, articleNumber, price,
-                        Objects.requireNonNull(LineOfFurniture.selectLineOfFurnitureById(idLine)), level);
+                piecesOfFurniture.add(new PieceOfFurniture(idPiece, pieceType, articleNumber, price,
+                        Objects.requireNonNull(LineOfFurniture.selectLineOfFurnitureById(idLine)), level));
             }
             return piecesOfFurniture;
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return null;

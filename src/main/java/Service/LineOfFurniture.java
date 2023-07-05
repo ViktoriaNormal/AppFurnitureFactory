@@ -1,6 +1,8 @@
-package com.example.demo;
+package Service;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class LineOfFurniture {
 
@@ -55,31 +57,50 @@ public class LineOfFurniture {
         return this;
     }
 
-    public static LineOfFurniture[] selectAllLinesOfFurniture() {
+//    public static LineOfFurniture[] selectAllLinesOfFurniture() {
+//        String query = "SELECT * FROM line_of_furniture";
+//        try {
+//            PreparedStatement statement = Connector.getConnection().prepareStatement(query);
+//            ResultSet resultSet = statement.executeQuery(query);
+//            ResultSetMetaData metaData = resultSet.getMetaData();
+//            int columnCount = metaData.getColumnCount();
+//            LineOfFurniture[] linesOfFurniture = new LineOfFurniture[columnCount];
+//            int index = 0;
+//            while (resultSet.next()) {
+//                int idLine = resultSet.getInt("id_line");
+//                String name = resultSet.getString("name");
+//                int level = resultSet.getInt("confidentiality_level");
+//                linesOfFurniture[index++] = new LineOfFurniture(idLine, name, level);
+//            }
+//            return linesOfFurniture;
+//        }
+//        catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//        return null;
+//    }
+
+    public static List<LineOfFurniture> selectAllLinesOfFurniture() {
         String query = "SELECT * FROM line_of_furniture";
-        try {
-            PreparedStatement statement = Connector.getConnection().prepareStatement(query);
-            ResultSet resultSet = statement.executeQuery(query);
-            ResultSetMetaData metaData = resultSet.getMetaData();
-            int columnCount = metaData.getColumnCount();
-            LineOfFurniture[] linesOfFurniture = new LineOfFurniture[columnCount];
-            int index = 0;
+        try (PreparedStatement statement = Connector.getConnection().prepareStatement(query)) {
+            ResultSet resultSet = statement.executeQuery();
+            List<LineOfFurniture> linesOfFurniture = new ArrayList<>();
             while (resultSet.next()) {
                 int idLine = resultSet.getInt("id_line");
                 String name = resultSet.getString("name");
                 int level = resultSet.getInt("confidentiality_level");
-                linesOfFurniture[index++] = new LineOfFurniture(idLine, name, level);
+                linesOfFurniture.add(new LineOfFurniture(idLine, name, level));
             }
             return linesOfFurniture;
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return null;
     }
 
+
     public static LineOfFurniture selectLineOfFurnitureById(int id_line) {
-        String query = "SELECT * FROM lines_of_furniture WHERE id_line = ?";
+        String query = "SELECT * FROM line_of_furniture WHERE id_line = ?";
         try (PreparedStatement statement = Connector.getConnection().prepareStatement(query)) {
             statement.setInt(1, id_line);
             try (ResultSet resultSet = statement.executeQuery()) {

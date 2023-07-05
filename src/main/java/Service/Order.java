@@ -1,7 +1,9 @@
-package com.example.demo;
+package Service;
 
 import java.sql.Date;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class Order {
@@ -76,27 +78,47 @@ public class Order {
         return this;
     }
 
-    public static Order[] selectAllOrders() {
+//    public static Order[] selectAllOrders() {
+//        String query = "SELECT * FROM orders";
+//        try {
+//            PreparedStatement statement = Connector.getConnection().prepareStatement(query);
+//            ResultSet resultSet = statement.executeQuery(query);
+//            ResultSetMetaData metaData = resultSet.getMetaData();
+//            int columnCount = metaData.getColumnCount();
+//            Order[] orders = new Order[columnCount];
+//            int index = 0;
+//            while (resultSet.next()) {
+//                int idOrder = resultSet.getInt("id_of_order");
+//                int idShop = resultSet.getInt("id_of_shop");
+//                Date date = resultSet.getDate("date_of_order");
+//                int number = resultSet.getInt("number_of_order");
+//                int level = resultSet.getInt("confidentiality_level");
+//                orders[index++] = new Order(idOrder, Objects.requireNonNull(Shop.selectShopById(idShop)), date, number,
+//                        level);
+//            }
+//            return orders;
+//        }
+//        catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//        return null;
+//    }
+
+    public static List<Order> selectAllOrders() {
         String query = "SELECT * FROM orders";
-        try {
-            PreparedStatement statement = Connector.getConnection().prepareStatement(query);
-            ResultSet resultSet = statement.executeQuery(query);
-            ResultSetMetaData metaData = resultSet.getMetaData();
-            int columnCount = metaData.getColumnCount();
-            Order[] orders = new Order[columnCount];
-            int index = 0;
+        try (PreparedStatement statement = Connector.getConnection().prepareStatement(query)) {
+            ResultSet resultSet = statement.executeQuery();
+            List<Order> orders = new ArrayList<>();
             while (resultSet.next()) {
                 int idOrder = resultSet.getInt("id_of_order");
                 int idShop = resultSet.getInt("id_of_shop");
                 Date date = resultSet.getDate("date_of_order");
                 int number = resultSet.getInt("number_of_order");
                 int level = resultSet.getInt("confidentiality_level");
-                orders[index++] = new Order(idOrder, Objects.requireNonNull(Shop.selectShopById(idShop)), date, number,
-                        level);
+                orders.add(new Order(idOrder, Objects.requireNonNull(Shop.selectShopById(idShop)), date, number, level));
             }
             return orders;
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return null;

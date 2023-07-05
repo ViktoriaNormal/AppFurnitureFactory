@@ -1,6 +1,8 @@
-package com.example.demo;
+package Service;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Component {
 
@@ -75,26 +77,46 @@ public class Component {
         return this;
     }
 
-    public static Component[] selectAllComponents() {
+//    public static Component[] selectAllComponents() {
+//        String query = "SELECT * FROM component";
+//        try {
+//            PreparedStatement statement = Connector.getConnection().prepareStatement(query);
+//            ResultSet resultSet = statement.executeQuery(query);
+//            ResultSetMetaData metaData = resultSet.getMetaData();
+//            int columnCount = metaData.getColumnCount();
+//            Component[] components = new Component[columnCount];
+//            int index = 0;
+//            while (resultSet.next()) {
+//                int id = resultSet.getInt("id_of_component");
+//                String type = resultSet.getString("component_type");
+//                int price = resultSet.getInt("manufacturing_price");
+//                int code = resultSet.getInt("digital_code");
+//                int level = resultSet.getInt("confidentiality_level");
+//                components[index++] = new Component(id, type, price, code, level);
+//            }
+//            return components;
+//        }
+//        catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//        return null;
+//    }
+
+    public static List<Component> selectAllComponents() {
         String query = "SELECT * FROM component";
-        try {
-            PreparedStatement statement = Connector.getConnection().prepareStatement(query);
-            ResultSet resultSet = statement.executeQuery(query);
-            ResultSetMetaData metaData = resultSet.getMetaData();
-            int columnCount = metaData.getColumnCount();
-            Component[] components = new Component[columnCount];
-            int index = 0;
+        try (PreparedStatement statement = Connector.getConnection().prepareStatement(query)) {
+            ResultSet resultSet = statement.executeQuery();
+            List<Component> components = new ArrayList<>();
             while (resultSet.next()) {
                 int id = resultSet.getInt("id_of_component");
                 String type = resultSet.getString("component_type");
                 int price = resultSet.getInt("manufacturing_price");
                 int code = resultSet.getInt("digital_code");
                 int level = resultSet.getInt("confidentiality_level");
-                components[index++] = new Component(id, type, price, code, level);
+                components.add(new Component(id, type, price, code, level));
             }
             return components;
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return null;

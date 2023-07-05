@@ -1,6 +1,8 @@
-package com.example.demo;
+package Service;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class FurnitureComponent {
@@ -61,26 +63,46 @@ public class FurnitureComponent {
 //        return this;
 //    }
 
-    public static FurnitureComponent[] selectAllFurnitureComponents() {
+//    public static FurnitureComponent[] selectAllFurnitureComponents() {
+//        String query = "SELECT * FROM furniture_component";
+//        try {
+//            PreparedStatement statement = Connector.getConnection().prepareStatement(query);
+//            ResultSet resultSet = statement.executeQuery(query);
+//            ResultSetMetaData metaData = resultSet.getMetaData();
+//            int columnCount = metaData.getColumnCount();
+//            FurnitureComponent[] furnitureComponents = new FurnitureComponent[columnCount];
+//            int index = 0;
+//            while (resultSet.next()) {
+//                int pieceId = resultSet.getInt("id_of_piece");
+//                int componentId = resultSet.getInt("id_of_component");
+//                int level = resultSet.getInt("confidentiality_level");
+//                furnitureComponents[index++] = new FurnitureComponent(
+//                        Objects.requireNonNull(PieceOfFurniture.selectPieceOfFurnitureById(pieceId)),
+//                        Objects.requireNonNull(Component.selectComponentById(componentId)), level);
+//            }
+//            return furnitureComponents;
+//        }
+//        catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//        return null;
+//    }
+
+    public static List<FurnitureComponent> selectAllFurnitureComponents() {
         String query = "SELECT * FROM furniture_component";
-        try {
-            PreparedStatement statement = Connector.getConnection().prepareStatement(query);
-            ResultSet resultSet = statement.executeQuery(query);
-            ResultSetMetaData metaData = resultSet.getMetaData();
-            int columnCount = metaData.getColumnCount();
-            FurnitureComponent[] furnitureComponents = new FurnitureComponent[columnCount];
-            int index = 0;
+        try (PreparedStatement statement = Connector.getConnection().prepareStatement(query)) {
+            ResultSet resultSet = statement.executeQuery();
+            List<FurnitureComponent> furnitureComponents = new ArrayList<>();
             while (resultSet.next()) {
                 int pieceId = resultSet.getInt("id_of_piece");
                 int componentId = resultSet.getInt("id_of_component");
                 int level = resultSet.getInt("confidentiality_level");
-                furnitureComponents[index++] = new FurnitureComponent(
-                        Objects.requireNonNull(PieceOfFurniture.selectPieceOfFurnitureById(pieceId)),
-                        Objects.requireNonNull(Component.selectComponentById(componentId)), level);
+                PieceOfFurniture piece = PieceOfFurniture.selectPieceOfFurnitureById(pieceId);
+                Component component = Component.selectComponentById(componentId);
+                furnitureComponents.add(new FurnitureComponent(piece, component, level));
             }
             return furnitureComponents;
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return null;

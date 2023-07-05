@@ -1,6 +1,8 @@
-package com.example.demo;
+package Service;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class FurnitureOrder {
@@ -63,22 +65,18 @@ public class FurnitureOrder {
 //        return furnitureOrder;
 //    }
 
-    public static FurnitureOrder[] selectAllFurnitureOrders() {
+    public static List<FurnitureOrder> selectAllFurnitureOrders() {
         String query = "SELECT * FROM furniture_orders";
         try {
             PreparedStatement statement = Connector.getConnection().prepareStatement(query);
             ResultSet resultSet = statement.executeQuery(query);
-            ResultSetMetaData metaData = resultSet.getMetaData();
-            int columnCount = metaData.getColumnCount();
-            FurnitureOrder[] furnitureOrders = new FurnitureOrder[columnCount];
-            int index = 0;
+            List<FurnitureOrder> furnitureOrders = new ArrayList<>();
             while (resultSet.next()) {
                 int orderId = resultSet.getInt("id_of_order");
                 int pieceId = resultSet.getInt("id_of_piece");
                 int quantity = resultSet.getInt("quantity");
                 int level = resultSet.getInt("confidentiality_level");
-                furnitureOrders[index++] = new FurnitureOrder(Objects.requireNonNull(Order.selectOrderById(orderId)),
-                        Objects.requireNonNull(PieceOfFurniture.selectPieceOfFurnitureById(pieceId)), quantity, level);
+                furnitureOrders.add(new FurnitureOrder(Objects.requireNonNull(Order.selectOrderById(orderId)), Objects.requireNonNull(PieceOfFurniture.selectPieceOfFurnitureById(pieceId)), quantity, level));
             }
             return furnitureOrders;
         }
@@ -87,6 +85,7 @@ public class FurnitureOrder {
         }
         return null;
     }
+
 
     public static FurnitureOrder selectFurnitureOrderById(int id_of_order, int id_of_piece) {
         String query = "SELECT * FROM furniture_orders WHERE id_of_order = ? AND id_of_piece = ?";

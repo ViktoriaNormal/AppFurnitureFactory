@@ -1,6 +1,8 @@
-package com.example.demo;
+package Service;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Shop {
 
@@ -70,32 +72,51 @@ public class Shop {
         return this;
     }
 
-    public static Shop[] selectAllShops() {
+//    public static Shop[] selectAllShops() {
+//        String query = "SELECT * FROM shop";
+//        try {
+//            PreparedStatement statement = Connector.getConnection().prepareStatement(query);
+//            ResultSet resultSet = statement.executeQuery(query);
+//            ResultSetMetaData metaData = resultSet.getMetaData();
+//            int columnCount = metaData.getColumnCount();
+//            Shop[] shops = new Shop[columnCount];
+//            int index = 0;
+//            while (resultSet.next()) {
+//                int idShop = resultSet.getInt("id_of_shop");
+//                String address = resultSet.getString("address");
+//                int faxNumber = resultSet.getInt("fax_number");
+//                int level = resultSet.getInt("confidentiality_level");
+//                shops[index++] = new Shop(idShop, address, faxNumber, level);
+//            }
+//            return shops;
+//        }
+//        catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//        return null;
+//    }
+
+    public static List<Shop> selectAllShops() {
         String query = "SELECT * FROM shop";
-        try {
-            PreparedStatement statement = Connector.getConnection().prepareStatement(query);
-            ResultSet resultSet = statement.executeQuery(query);
-            ResultSetMetaData metaData = resultSet.getMetaData();
-            int columnCount = metaData.getColumnCount();
-            Shop[] shops = new Shop[columnCount];
-            int index = 0;
+        try (PreparedStatement statement = Connector.getConnection().prepareStatement(query)) {
+            ResultSet resultSet = statement.executeQuery();
+            List<Shop> shops = new ArrayList<>();
             while (resultSet.next()) {
                 int idShop = resultSet.getInt("id_of_shop");
                 String address = resultSet.getString("address");
                 int faxNumber = resultSet.getInt("fax_number");
                 int level = resultSet.getInt("confidentiality_level");
-                shops[index++] = new Shop(idShop, address, faxNumber, level);
+                shops.add(new Shop(idShop, address, faxNumber, level));
             }
             return shops;
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return null;
     }
 
     public static Shop selectShopById(int id_of_shop) {
-        String query = "SELECT * FROM shops WHERE id_of_shop = ?";
+        String query = "SELECT * FROM shop WHERE id_of_shop = ?";
         try (PreparedStatement statement = Connector.getConnection().prepareStatement(query)) {
             statement.setInt(1, id_of_shop);
             try (ResultSet resultSet = statement.executeQuery()) {
