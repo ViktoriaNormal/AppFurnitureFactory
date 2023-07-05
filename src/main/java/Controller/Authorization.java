@@ -36,12 +36,12 @@ public class Authorization {
 
     @FXML
     void close(ActionEvent event) {
-
+        System.exit(0);
     }
 
     @FXML
     void signin(ActionEvent event) {
-
+        HelloApplication.changeScene("/Viewer/TableLines.fxml");
     }
 
     @FXML

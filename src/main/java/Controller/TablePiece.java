@@ -2,6 +2,8 @@ package Controller;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+
+import com.example.demo.HelloApplication;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -20,7 +22,7 @@ public class TablePiece {
     private Button addcomponent;
 
     @FXML
-    private TextField article_number;
+    private TextField article_numberfield;
 
     @FXML
     private Button close;
@@ -29,13 +31,13 @@ public class TablePiece {
     private Button component;
 
     @FXML
-    private TextField confidentiality_level;
+    private TextField confidentiality_levelfield;
 
     @FXML
     private Button delete;
 
     @FXML
-    private TextField id_line;
+    private TextField id_linefield;
 
     @FXML
     private TableColumn<?, ?> id_of_piece;
@@ -62,7 +64,10 @@ public class TablePiece {
     private TextField piece_typefield;
 
     @FXML
-    private TextField price;
+    private TextField pricefield;
+
+    @FXML
+    private TextField id_of_component;
 
     @FXML
     private Button profile;
@@ -83,7 +88,7 @@ public class TablePiece {
 
     @FXML
     void close(ActionEvent event) {
-
+        System.exit(0);
     }
 
     @FXML
@@ -103,37 +108,37 @@ public class TablePiece {
 
     @FXML
     void tocomponent(ActionEvent event) {
-
+        HelloApplication.changeScene("/Viewer/TableComponent.fxml");
     }
 
     @FXML
     void toline(ActionEvent event) {
-
+        HelloApplication.changeScene("/Viewer/TableLines.fxml");
     }
 
     @FXML
     void toorder(ActionEvent event) {
-
+        HelloApplication.changeScene("/Viewer/TableOrder.fxml");
     }
 
     @FXML
     void topiece(ActionEvent event) {
-
+        HelloApplication.changeScene("/Viewer/TablePiece.fxml");
     }
 
     @FXML
     void toprofile(ActionEvent event) {
-
+        HelloApplication.changeScene("/Viewer/Profile.fxml");
     }
 
     @FXML
     void toshop(ActionEvent event) {
-
+        HelloApplication.changeScene("/Viewer/TableShop.fxml");
     }
 
     @FXML
     void touser(ActionEvent event) {
-
+        HelloApplication.changeScene("/Viewer/TableUser.fxml");
     }
 
     @FXML
@@ -143,6 +148,7 @@ public class TablePiece {
 
     @FXML
     void initialize() {
+
 
     }
 

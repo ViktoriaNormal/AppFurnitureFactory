@@ -2,6 +2,8 @@ package Controller;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+
+import com.example.demo.HelloApplication;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -59,12 +61,12 @@ public class Profile {
 
     @FXML
     void close(ActionEvent event) {
-
+        System.exit(0);
     }
 
     @FXML
     void logout(ActionEvent event) {
-
+        HelloApplication.changeScene("/Viewer/Authorization.fxml");
     }
 
     @FXML
@@ -84,31 +86,32 @@ public class Profile {
 
     @FXML
     void toline(ActionEvent event) {
-
+        HelloApplication.changeScene("/Viewer/TableLines.fxml");
     }
 
     @FXML
     void toorder(ActionEvent event) {
-
+        HelloApplication.changeScene("/Viewer/TableOrder.fxml");
     }
 
     @FXML
     void topiece(ActionEvent event) {
-
+        HelloApplication.changeScene("/Viewer/TablePiece.fxml");
     }
 
     @FXML
     void toshop(ActionEvent event) {
-
+        HelloApplication.changeScene("/Viewer/TableShop.fxml");
     }
 
     @FXML
     void touser(ActionEvent event) {
-
+        HelloApplication.changeScene("/Viewer/TableUser.fxml");
     }
 
     @FXML
     void initialize() {
+
 
     }
 

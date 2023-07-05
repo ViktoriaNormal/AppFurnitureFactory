@@ -24,10 +24,18 @@ public class Registration {
     private TextField password;
 
     @FXML
+    private Button close;
+
+    @FXML
     private Button register;
 
     @FXML
     private TextField username;
+
+    @FXML
+    void close(ActionEvent event) {
+        System.exit(0);
+    }
 
     @FXML
     void toregister(ActionEvent event) {

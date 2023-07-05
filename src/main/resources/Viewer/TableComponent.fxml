@@ -59,8 +59,8 @@
                   <Font name="Tahoma" size="28.0" />
                </font>
             </Label>
-            <Button layoutX="728.0" layoutY="24.0" mnemonicParsing="false" style="-fx-background-color: #ffffff;" text="Close" textFill="#125660" AnchorPane.rightAnchor="2.0" AnchorPane.topAnchor="2.0" />
-            <Button layoutX="706.0" layoutY="1.0" mnemonicParsing="false" style="-fx-background-color: #ffffff;" text="Profile" textFill="#125660" AnchorPane.topAnchor="2.0" />
+            <Button fx:id="close" layoutX="728.0" layoutY="24.0" mnemonicParsing="false" onAction="#close" style="-fx-background-color: #ffffff;" text="Close" textFill="#125660" AnchorPane.rightAnchor="2.0" AnchorPane.topAnchor="2.0" />
+            <Button fx:id="profile" layoutX="706.0" layoutY="1.0" mnemonicParsing="false" onAction="#toprofile" style="-fx-background-color: #ffffff;" text="Profile" textFill="#125660" AnchorPane.topAnchor="2.0" />
          </children>
       </AnchorPane>
       <TableView layoutX="235.0" layoutY="74.0" prefHeight="200.0" prefWidth="570.0">

@@ -2,6 +2,8 @@ package Controller;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+
+import com.example.demo.HelloApplication;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -15,6 +17,9 @@ public class TableComponent {
 
     @FXML
     private URL location;
+
+    @FXML
+    private Button close;
 
     @FXML
     private Button component;
@@ -65,6 +70,9 @@ public class TableComponent {
     private Button piece;
 
     @FXML
+    private Button profile;
+
+    @FXML
     private Button shop;
 
     @FXML
@@ -72,6 +80,11 @@ public class TableComponent {
 
     @FXML
     private Button user;
+
+    @FXML
+    void close(ActionEvent event) {
+        System.exit(0);
+    }
 
     @FXML
     void delete(ActionEvent event) {
@@ -85,32 +98,37 @@ public class TableComponent {
 
     @FXML
     void tocomponent(ActionEvent event) {
-
+        HelloApplication.changeScene("/Viewer/TableComponent.fxml");
     }
 
     @FXML
     void toline(ActionEvent event) {
-
+        HelloApplication.changeScene("/Viewer/TableLines.fxml");
     }
 
     @FXML
     void toorder(ActionEvent event) {
-
+        HelloApplication.changeScene("/Viewer/TableOrder.fxml");
     }
 
     @FXML
     void topiece(ActionEvent event) {
+        HelloApplication.changeScene("/Viewer/TablePiece.fxml");
+    }
 
+    @FXML
+    void toprofile(ActionEvent event) {
+        HelloApplication.changeScene("/Viewer/Profile.fxml");
     }
 
     @FXML
     void toshop(ActionEvent event) {
-
+        HelloApplication.changeScene("/Viewer/TableShop.fxml");
     }
 
     @FXML
     void touser(ActionEvent event) {
-
+        HelloApplication.changeScene("/Viewer/TableUser.fxml");
     }
 
     @FXML
@@ -120,6 +138,8 @@ public class TableComponent {
 
     @FXML
     void initialize() {
+
+
     }
 
 }

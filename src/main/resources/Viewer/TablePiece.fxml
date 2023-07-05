@@ -85,18 +85,18 @@
             <Button fx:id="update" layoutX="367.0" layoutY="460.0" mnemonicParsing="false" onAction="#update" prefWidth="100.0" style="-fx-background-color: #125660;" text="Update" textFill="WHITE" />
             <Button fx:id="delete" layoutX="615.0" layoutY="460.0" mnemonicParsing="false" onAction="#delete" prefWidth="100.0" style="-fx-background-color: #125660;" text="Delete" textFill="WHITE" />
             <TextField fx:id="piece_typefield" layoutX="253.0" layoutY="337.0" prefWidth="100.0" promptText="piece_type" />
-            <TextField fx:id="article_number" layoutX="253.0" layoutY="369.0" prefWidth="100.0" promptText="article_number" />
+            <TextField fx:id="article_numberfield" layoutX="253.0" layoutY="369.0" prefWidth="100.0" promptText="article_number" />
             <TextField fx:id="id_of_piecetodelete" layoutX="727.0" layoutY="460.0" prefWidth="50.0" promptText="id_of_piece" />
-            <TextField fx:id="price" layoutX="253.0" layoutY="402.0" prefWidth="100.0" promptText="price" />
-            <TextField fx:id="id_line" layoutX="367.0" layoutY="337.0" prefWidth="100.0" promptText="id_line" />
-            <TextField fx:id="confidentiality_level" layoutX="367.0" layoutY="369.0" prefWidth="100.0" promptText="confidentiality_level" />
+            <TextField fx:id="pricefield" layoutX="253.0" layoutY="402.0" prefWidth="100.0" promptText="price" />
+            <TextField fx:id="id_linefield" layoutX="367.0" layoutY="337.0" prefWidth="100.0" promptText="id_line" />
+            <TextField fx:id="confidentiality_levelfield" layoutX="367.0" layoutY="369.0" prefWidth="100.0" promptText="confidentiality_level" />
             <Button fx:id="addcomponent" layoutX="537.0" layoutY="369.0" mnemonicParsing="false" onAction="#addcomponent" style="-fx-background-color: #125660;" text="Add component to piece of furniture" textFill="WHITE" />
             <Label layoutX="537.0" layoutY="313.0" text="Assign a component to a piece of furniture" textFill="#125660">
                <font>
                   <Font name="Tahoma Bold" size="12.0" />
                </font>
             </Label>
-            <TextField layoutX="537.0" layoutY="337.0" onAction="#id_of_component" promptText="id_of_component" />
+            <TextField fx:id="id_of_component" layoutX="537.0" layoutY="337.0" onAction="#id_of_component" promptText="id_of_component" />
          </children>
       </AnchorPane>
    </children>

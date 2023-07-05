@@ -2,6 +2,8 @@ package Controller;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+
+import com.example.demo.HelloApplication;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -17,7 +19,7 @@ public class TableShop {
     private URL location;
 
     @FXML
-    private TextField address;
+    private TextField addressfield;
 
     @FXML
     private Button close;
@@ -26,13 +28,13 @@ public class TableShop {
     private Button component;
 
     @FXML
-    private TextField confidentiality_level;
+    private TextField confidentiality_levelfield;
 
     @FXML
     private Button delete;
 
     @FXML
-    private TextField fax_number;
+    private TextField fax_numberfield;
 
     @FXML
     private TableColumn<?, ?> id_of_shop;
@@ -66,7 +68,7 @@ public class TableShop {
 
     @FXML
     void close(ActionEvent event) {
-
+        System.exit(0);
     }
 
     @FXML
@@ -81,37 +83,37 @@ public class TableShop {
 
     @FXML
     void tocomponent(ActionEvent event) {
-
+        HelloApplication.changeScene("/Viewer/TableComponent.fxml");
     }
 
     @FXML
     void toline(ActionEvent event) {
-
+        HelloApplication.changeScene("/Viewer/TableLines.fxml");
     }
 
     @FXML
     void toorder(ActionEvent event) {
-
+        HelloApplication.changeScene("/Viewer/TableOrder.fxml");
     }
 
     @FXML
     void topiece(ActionEvent event) {
-
+        HelloApplication.changeScene("/Viewer/TablePiece.fxml");
     }
 
     @FXML
     void toprofile(ActionEvent event) {
-
+        HelloApplication.changeScene("/Viewer/Profile.fxml");
     }
 
     @FXML
     void toshop(ActionEvent event) {
-
+        HelloApplication.changeScene("/Viewer/TableShop.fxml");
     }
 
     @FXML
     void touser(ActionEvent event) {
-
+        HelloApplication.changeScene("/Viewer/TableUser.fxml");
     }
 
     @FXML
@@ -121,6 +123,8 @@ public class TableShop {
 
     @FXML
     void initialize() {
+
+
     }
 
 }

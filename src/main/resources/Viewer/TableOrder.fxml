@@ -80,11 +80,11 @@
       <Button fx:id="insert" layoutX="253.0" layoutY="460.0" mnemonicParsing="false" onAction="#insert" prefWidth="100.0" style="-fx-background-color: #125660;" text="Insert" textFill="WHITE" />
       <Button fx:id="update" layoutX="367.0" layoutY="460.0" mnemonicParsing="false" onAction="#update" prefWidth="100.0" style="-fx-background-color: #125660;" text="Update" textFill="WHITE" />
       <Button fx:id="delete" layoutX="615.0" layoutY="460.0" mnemonicParsing="false" onAction="#delete" prefWidth="100.0" style="-fx-background-color: #125660;" text="Delete" textFill="WHITE" />
-      <TextField fx:id="id_of_shop" layoutX="253.0" layoutY="337.0" prefWidth="100.0" promptText="id_of_shop" />
-      <TextField fx:id="date_of_order" layoutX="253.0" layoutY="369.0" prefWidth="100.0" promptText="date_of_order" />
+      <TextField fx:id="id_of_shopfield" layoutX="253.0" layoutY="337.0" prefWidth="100.0" promptText="id_of_shop" />
+      <TextField fx:id="date_of_orderfield" layoutX="253.0" layoutY="369.0" prefWidth="100.0" promptText="date_of_order" />
       <TextField fx:id="id_of_ordertodelete" layoutX="727.0" layoutY="460.0" prefWidth="50.0" promptText="id_of_order" />
-      <TextField fx:id="confidentiality_level" layoutX="367.0" layoutY="369.0" prefWidth="100.0" promptText="confidentiality_level" />
-      <TextField fx:id="number_of_order" layoutX="367.0" layoutY="337.0" prefWidth="100.0" promptText="number_of_order" />
+      <TextField fx:id="confidentiality_levelfield" layoutX="367.0" layoutY="369.0" prefWidth="100.0" promptText="confidentiality_level" />
+      <TextField fx:id="number_of_orderfield" layoutX="367.0" layoutY="337.0" prefWidth="100.0" promptText="number_of_order" />
       <Button fx:id="makeorder" layoutX="537.0" layoutY="369.0" mnemonicParsing="false" onAction="#makeorder" prefWidth="160.0" style="-fx-background-color: #125660;" text="Make an order" textFill="WHITE" />
       <Label layoutX="537.0" layoutY="313.0" text="Make a furniture order (enter id_of_piece)" textFill="#125660">
          <font>
