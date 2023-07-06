@@ -1,6 +1,7 @@
 package com.example.demo;
 
 
+import Service.Component;
 import Service.Connector;
 import Service.User;
 import javafx.application.Application;
@@ -10,6 +11,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Objects;
 
 public class HelloApplication extends Application {
@@ -36,8 +38,10 @@ public class HelloApplication extends Application {
         return null;
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException {
+
         Connector connector = new Connector();
+        System.out.println(Component.selectAllComponents());
         launch();
     }
 }

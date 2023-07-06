@@ -50,32 +50,48 @@ public class Authorization {
         System.exit(0);
     }
 
+//    @FXML
+//    void signin(ActionEvent event) {
+//        try {
+//            Animation animationPassword = new Animation(password);
+//            Animation animationUsername = new Animation(username);
+//
+//            String userName = username.getText();
+//            String hashPassword = User.makeMD5(password.getText());
+//            String query = "SELECT * FROM users WHERE username = ? AND password = ?";
+//            PreparedStatement statement = Connector.getConnection().prepareStatement(query);
+//
+//            statement.setString(1, userName);
+//            statement.setString(2, hashPassword);
+//            ResultSet result = statement.executeQuery();
+//            if (result.next()) {
+//                HelloApplication.changeScene("/Viewer/TableLines.fxml");
+//            }
+//            else {
+//                animationPassword.playAnimation();
+//                animationUsername.playAnimation();
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
+
     @FXML
     void signin(ActionEvent event) {
         try {
             Animation animationPassword = new Animation(password);
             Animation animationUsername = new Animation(username);
-
             String userName = username.getText();
-            String hashPassword = User.makeMD5(password.getText());
-            String query = "SELECT * FROM users WHERE username = ? AND password = ?";
-            PreparedStatement statement = Connector.getConnection().prepareStatement(query);
-
-            statement.setString(1, userName);
-            statement.setString(2, hashPassword);
-            ResultSet result = statement.executeQuery();
-            if (result.next()) {
+            String hashPassword = password.getText();
+            if (User.selectUserByUNP(userName, User.makeMD5(hashPassword)) != null) {
+                User.login(new User(userName, User.makeMD5(hashPassword)));
                 HelloApplication.changeScene("/Viewer/TableLines.fxml");
             }
             else {
                 animationPassword.playAnimation();
-                animationUsername.playAnimation();
-            }
-
-            Connector.breakConnection();
+                animationUsername.playAnimation();        }
         } catch (Exception e) {
-            e.printStackTrace();
-        }
+            e.printStackTrace();    }
     }
 
     @FXML

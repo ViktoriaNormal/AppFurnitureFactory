@@ -3,6 +3,7 @@ package Controller;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import Service.Component;
 import com.example.demo.HelloApplication;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

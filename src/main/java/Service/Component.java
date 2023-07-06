@@ -81,9 +81,9 @@ public class Component {
         return this;
     }
 
-    public static ObservableList<Component> selectAllComponents() {
+    public static ObservableList<Component> selectAllComponents() throws SQLException {
         String query = "SELECT * FROM component";
-        try (PreparedStatement statement = Connector.getConnection().prepareStatement(query)) {
+        PreparedStatement statement = Connector.getConnection().prepareStatement(query);
             ResultSet resultSet = statement.executeQuery();
             ObservableList<Component> components = FXCollections.observableArrayList();
             while (resultSet.next()) {
@@ -95,10 +95,6 @@ public class Component {
                 components.add(new Component(id, type, price, code, level));
             }
             return components;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 
     public static Component selectComponentById(int id_of_component) {

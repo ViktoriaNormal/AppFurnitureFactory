@@ -3,6 +3,7 @@ package Controller;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import Service.User;
 import com.example.demo.HelloApplication;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -69,6 +70,17 @@ public class Profile {
         HelloApplication.changeScene("/Viewer/Authorization.fxml");
     }
 
+    public void submitChange() throws NoSuchAlgorithmException, InvalidKeySpecException, SQLException {
+        String password = passwordText.getText();    String change = changeText.getText();    passwordText.setText("");    changeText.setText("");    if (!change.matches("[A-Za-z0-9]+")) {
+            errorLabel.setText("Только латинские букв или цифры");        return;    }
+        if (!userService.passwordHashing(password).equals(user.getPassword())) {
+            errorLabel.setText("Неправильный пароль");        return;    }
+        if (passwordChange) {
+            userService.changePassword(user, change);        user.setPassword(userService.passwordHashing(change));    } else {
+            if (userService.exists(change)) {
+                errorLabel.setText("Данный логин занят");            return;        }
+            userService.changeName(user, change);        user.setUsername(change);    }
+        errorLabel.setText("");    changeSuccessLabel.setVisible(true);    showInfo();}
     @FXML
     void savepassword(ActionEvent event) {
 
@@ -76,7 +88,11 @@ public class Profile {
 
     @FXML
     void saveusername(ActionEvent event) {
-
+        String currentUsername = curusername.getText();
+        String newUsername = newusername.getText();
+        if (!currentUsername.equals(User.getInstance().getUsername())) {
+            User.getInstance().updateUser("username", newUsername);
+        }
     }
 
     @FXML
@@ -111,7 +127,6 @@ public class Profile {
 
     @FXML
     void initialize() {
-
 
     }
 

@@ -13,6 +13,7 @@ import java.util.List;
 
 public class User {
 
+    private static User object;
     private int id_user;
     private String username;
     private String password;
@@ -32,12 +33,26 @@ public class User {
         this.availability_level = 0;
     }
 
+    public User(String user_name, String password) {
+        this.username = user_name;
+        this.password = password;
+        this.availability_level = 0;
+    }
+
+    public static void login(User user) {
+        object = user;
+    }
+
+    public static User getInstance() {
+        return object;
+    }
+
     public User insertUser() {
         String query = "INSERT INTO users (username, password, availability_level) VALUES (?, ?, ?)";
         try (PreparedStatement statement = Connector.getConnection().prepareStatement(query)) {
-            statement.setString(2, getUsername());
-            statement.setString(3, getPassword());
-            statement.setInt(4, getAvailability_level());
+            statement.setString(1, getUsername());
+            statement.setString(2, getPassword());
+            statement.setInt(3, getAvailability_level());
             statement.executeUpdate();
         }
         catch (SQLException e) {

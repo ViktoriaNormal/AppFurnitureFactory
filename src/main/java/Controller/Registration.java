@@ -49,35 +49,23 @@ public class Registration {
 
             Animation animationUsername = new Animation(username);
             Animation animationPassword = new Animation(password);
-            Animation shapeEmail = new Animation(password);
-
-            String passwordInsert = password.getText();
-            String usernameInsert = username.getText();
 
             String userName = username.getText();
-            String hashPassword = User.makeMD5(password.getText());
-            int availability_level = 0;
+            String hashPassword = password.getText();
 
             if (userName.isEmpty() || hashPassword.isEmpty()) {
                 animationUsername.playAnimation();
                 animationPassword.playAnimation();
             }else {
-                String query = "INSERT INTO users (username, password, availability_level) VALUES (?, ?, ?);";
-                PreparedStatement statement = Connector.getConnection().prepareStatement(query);
-
-                statement.setString(1, userName);
-                statement.setString(2, hashPassword);
-                statement.setInt(3, availability_level);
-
-                try {
-                    statement.execute();
-                    HelloApplication.changeScene("/Viewer/Authorization.fxml");
-                } catch (SQLIntegrityConstraintViolationException e) {
+                User user = new User(userName, User.makeMD5(hashPassword));
+                try{
+                user.insertUser();
+                HelloApplication.changeScene("/Viewer/Authorization.fxml");
+                } catch (Exception e) {
                     animationUsername.playAnimation();
                     animationPassword.playAnimation();
                 }
             }
-            Connector.breakConnection();
         } catch (Exception e) {
             e.printStackTrace();
         }
