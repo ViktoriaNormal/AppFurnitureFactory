@@ -84,6 +84,7 @@
             <TextField fx:id="namefield" layoutX="253.0" layoutY="330.0" promptText="name" />
             <TextField fx:id="confidentiality_levelfield" layoutX="253.0" layoutY="363.0" promptText="confidentiality_level" />
             <TextField fx:id="idtodelete" layoutX="732.0" layoutY="460.0" onAction="#delete" prefWidth="50.0" promptText="id_line" />
+            <TextField fx:id="idupdate" layoutX="471.0" layoutY="460.0" prefHeight="26.0" prefWidth="60.0" promptText="id_line" />
          </children>
       </AnchorPane>
    </children>

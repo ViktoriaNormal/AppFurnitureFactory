@@ -32,12 +32,19 @@ public class Component {
         this.confidentiality_level = 0;
     }
 
+    public Component(String component_type, int manufacturing_price, int digital_code) {
+        this.component_type = component_type;
+        this.manufacturing_price = manufacturing_price;
+        this.digital_code = digital_code;
+        this.confidentiality_level = 0;
+    }
+
     public Component insertComponent() {
         String query = "INSERT INTO component (component_type, manufacturing_price, digital_code) VALUES (?, ?, ?)";
         try (PreparedStatement statement = Connector.getConnection().prepareStatement(query)) {
-            statement.setString(2, getComponent_type());
-            statement.setInt(3, getManufacturing_price());
-            statement.setInt(4, getDigital_code());
+            statement.setString(1, getComponent_type());
+            statement.setInt(2, getManufacturing_price());
+            statement.setInt(3, getDigital_code());
             statement.executeUpdate();
         }
         catch (SQLException e) {
@@ -58,8 +65,31 @@ public class Component {
         return null;
     }
 
-    public Component updateComponent(String column_name, Object new_value) {
+    public Component updateComponentDig(String column_name, Object new_value) {
         String query = "UPDATE component SET " + column_name + " = " + new_value + " WHERE id_of_component = " + getId_of_component();
+        try (PreparedStatement statement = Connector.getConnection().prepareStatement(query)) {
+            statement.executeUpdate(query);
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            switch (column_name) {
+                case "component_type" -> setComponent_type((String) new_value);
+                case "manufacturing_price" -> setManufacturing_price((int) new_value);
+                case "digital_code" -> setDigital_code((int) new_value);
+            }
+        }
+        catch (Exception e) {
+            System.out.println("Произошла ошибка: " + e.getMessage());
+        }
+
+        return this;
+    }
+
+    public Component updateComponentST(String column_name, Object new_value) {
+        String query = "UPDATE component SET '" + column_name + "' = " + new_value + " WHERE id_of_component = " + getId_of_component();
         try (PreparedStatement statement = Connector.getConnection().prepareStatement(query)) {
             statement.executeUpdate(query);
         }

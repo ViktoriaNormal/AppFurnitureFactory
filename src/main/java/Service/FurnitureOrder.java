@@ -56,18 +56,6 @@ public class FurnitureOrder {
         return null;
     }
 
-//    public static FurnitureOrder updateFurnitureOrder(Connection connection, FurnitureOrder furnitureOrder) throws SQLException {
-//        String query = "UPDATE furniture_orders SET quantity = ?, confidentiality_level = ? WHERE id_of_order = ? AND id_of_piece = ?";
-//        try (PreparedStatement statement = connection.prepareStatement(query)) {
-//            statement.setInt(1, furnitureOrder.getQuantity());
-//            statement.setInt(2, furnitureOrder.getConfidentiality_level());
-//            statement.setInt(3, furnitureOrder.getId_of_order());
-//            statement.setInt(4, furnitureOrder.getId_of_piece());
-//            statement.executeUpdate();
-//        }
-//        return furnitureOrder;
-//    }
-
     public static ObservableList<FurnitureOrder> selectAllFurnitureOrders() {
         String query = "SELECT * FROM furniture_orders";
         try {

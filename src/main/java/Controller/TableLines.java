@@ -2,8 +2,10 @@ package Controller;
 
 import java.net.URL;
 import java.sql.SQLException;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
+import Animation.Animation;
 import Service.Component;
 import Service.LineOfFurniture;
 import com.example.demo.HelloApplication;
@@ -76,6 +78,9 @@ public class TableLines implements Initializable {
     private Button update;
 
     @FXML
+    private TextField idupdate;
+
+    @FXML
     private Button user;
 
     @FXML
@@ -85,12 +90,40 @@ public class TableLines implements Initializable {
 
     @FXML
     void delete(ActionEvent event) {
+        Animation animationPassword = new Animation(idtodelete);
 
+        String idDel = idtodelete.getText();
+        try {
+            LineOfFurniture lineOfFurniture = LineOfFurniture.selectLineOfFurnitureById(Integer.parseInt(idDel));
+            if (lineOfFurniture != null) {
+                lineOfFurniture.deleteLineOfFurniture();
+
+                changeViewer();
+            } else {
+                animationPassword.playAnimation();
+            }
+        }
+        catch (Exception e) {
+            animationPassword.playAnimation();
+        }
     }
 
     @FXML
     void insert(ActionEvent event) {
+        Animation animation1 = new Animation(namefield);
 
+        String nameField = namefield.getText();
+
+        LineOfFurniture lineOfFurniture;
+
+        if(!nameField.equals("")) {
+            lineOfFurniture = new LineOfFurniture(nameField);
+            lineOfFurniture.insertLineOfFurniture();
+            changeViewer();
+        }
+        else {
+            animation1.playAnimation();
+        }
     }
 
     @FXML
@@ -130,7 +163,31 @@ public class TableLines implements Initializable {
 
     @FXML
     void update(ActionEvent event) {
+        Animation animation1 = new Animation(namefield);
+        Animation animation2 = new Animation(confidentiality_levelfield);
+        String confidentiality_levelField = confidentiality_levelfield.getText();
+        String nameField = namefield.getText();
+        Animation animation4 = new Animation(idupdate);
+        String idUpdate = idupdate.getText();
 
+        try {
+            if(!idUpdate.equals("")) {
+                if (!nameField.equals("")) {
+                    Objects.requireNonNull(LineOfFurniture.selectLineOfFurnitureById(Integer.parseInt(idUpdate))).updateLineName(nameField);
+                }
+                changeViewer();
+            }
+            else {
+                animation1.playAnimation();
+                animation2.playAnimation();
+                animation4.playAnimation();
+            }
+        }
+        catch (Exception e) {
+            animation1.playAnimation();
+            animation2.playAnimation();
+            animation4.playAnimation();
+        }
     }
 
     @FXML
@@ -139,6 +196,10 @@ public class TableLines implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        changeViewer();
+    }
+
+    public void changeViewer() {
         id_line.setCellValueFactory(new PropertyValueFactory<>("id_line"));
         name.setCellValueFactory(new PropertyValueFactory<>("name"));
         confidentiality_level.setCellValueFactory(new PropertyValueFactory<>("confidentiality_level"));

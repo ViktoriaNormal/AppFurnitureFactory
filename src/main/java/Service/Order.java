@@ -32,12 +32,19 @@ public class Order {
         this.confidentiality_level = 0;
     }
 
+    public Order(Shop shop, Date date_of_order, int number_of_order) {
+        this.id_of_shop = shop.getId_of_shop();
+        this.date_of_order = date_of_order;
+        this.number_of_order = number_of_order;
+        this.confidentiality_level = 0;
+    }
+
     public Order insertOrder() {
         String query = "INSERT INTO orders (id_of_shop, date_of_order, number_of_order) VALUES (?, ?, ?)";
         try (PreparedStatement statement = Connector.getConnection().prepareStatement(query)) {
-            statement.setInt(2, getId_of_shop());
-            statement.setDate(3, getDate_of_order());
-            statement.setInt(4, getNumber_of_order());
+            statement.setInt(1, getId_of_shop());
+            statement.setDate(2, getDate_of_order());
+            statement.setInt(3, getNumber_of_order());
             statement.executeUpdate();
         }
         catch (SQLException e) {
@@ -60,6 +67,29 @@ public class Order {
 
     public Order updateOrder(String column_name, Object new_value) {
         String query = "UPDATE orders SET " + column_name + " = " + new_value + " WHERE id_of_order = " + getId_of_order();
+        try (PreparedStatement statement = Connector.getConnection().prepareStatement(query)) {
+            statement.executeUpdate(query);
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            switch (column_name) {
+                case "id_of_shop" -> setId_of_shop(Objects.requireNonNull(Shop.selectShopById((int) new_value)));
+                case "date_of_order" -> setDate_of_order((Date) new_value);
+                case "number_of_order" -> setNumber_of_order((int) new_value);
+            }
+        }
+        catch (Exception e) {
+            System.out.println("Произошла ошибка: " + e.getMessage());
+        }
+
+        return this;
+    }
+
+    public Order updateOrderST(String column_name, Object new_value) {
+        String query = "UPDATE orders SET " + column_name + " = '" + new_value + "' WHERE id_of_order = " + getId_of_order();
         try (PreparedStatement statement = Connector.getConnection().prepareStatement(query)) {
             statement.executeUpdate(query);
         }

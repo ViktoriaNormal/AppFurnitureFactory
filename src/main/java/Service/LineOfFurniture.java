@@ -25,10 +25,15 @@ public class LineOfFurniture {
         this.confidentiality_level = 0;
     }
 
+    public LineOfFurniture(String name) {
+        this.name = name;
+        this.confidentiality_level = 0;
+    }
+
     public LineOfFurniture insertLineOfFurniture() {
         String query = "INSERT INTO line_of_furniture (name) VALUES (?)";
         try (PreparedStatement statement = Connector.getConnection().prepareStatement(query)) {
-            statement.setString(2, getName());
+            statement.setString(1, getName());
             statement.executeUpdate();
         }
         catch (SQLException e) {
@@ -50,7 +55,7 @@ public class LineOfFurniture {
     }
 
     public LineOfFurniture updateLineName(String new_value) {
-        String query = "UPDATE line_of_furniture SET name = " + new_value + " WHERE id_line = " + getId_line();
+        String query = "UPDATE line_of_furniture SET name = '" + new_value + "' WHERE id_line = " + getId_line();
         try (PreparedStatement statement = Connector.getConnection().prepareStatement(query)) {
             statement.executeUpdate(query);
         }
@@ -60,28 +65,6 @@ public class LineOfFurniture {
         return this;
     }
 
-//    public static LineOfFurniture[] selectAllLinesOfFurniture() {
-//        String query = "SELECT * FROM line_of_furniture";
-//        try {
-//            PreparedStatement statement = Connector.getConnection().prepareStatement(query);
-//            ResultSet resultSet = statement.executeQuery(query);
-//            ResultSetMetaData metaData = resultSet.getMetaData();
-//            int columnCount = metaData.getColumnCount();
-//            LineOfFurniture[] linesOfFurniture = new LineOfFurniture[columnCount];
-//            int index = 0;
-//            while (resultSet.next()) {
-//                int idLine = resultSet.getInt("id_line");
-//                String name = resultSet.getString("name");
-//                int level = resultSet.getInt("confidentiality_level");
-//                linesOfFurniture[index++] = new LineOfFurniture(idLine, name, level);
-//            }
-//            return linesOfFurniture;
-//        }
-//        catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//        return null;
-//    }
 
     public static ObservableList<LineOfFurniture> selectAllLinesOfFurniture() {
         String query = "SELECT * FROM line_of_furniture";

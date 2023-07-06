@@ -1,8 +1,13 @@
 package Controller;
 
 import java.net.URL;
+import java.sql.Date;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
+import Animation.Animation;
+import Service.Component;
+import Service.Order;
 import Service.PieceOfFurniture;
 import Service.Shop;
 import com.example.demo.HelloApplication;
@@ -22,6 +27,9 @@ public class TableShop implements Initializable {
 
     @FXML
     private URL location;
+
+    @FXML
+    private TextField idupdate;
 
     @FXML
     private TextField addressfield;
@@ -90,12 +98,45 @@ public class TableShop implements Initializable {
 
     @FXML
     void delete(ActionEvent event) {
+        Animation animationPassword = new Animation(id_of_shoptodelete);
 
+        String idDel = id_of_shoptodelete.getText();
+        Shop shop1 = Shop.selectShopById(Integer.parseInt(idDel));
+        if(shop1 != null) {
+            shop1.deleteShop();
+
+
+        }
+        else {
+            animationPassword.playAnimation();
+        }
     }
 
     @FXML
     void insert(ActionEvent event) {
+        Animation animation1 = new Animation(addressfield);
+        Animation animation2 = new Animation(fax_numberfield);
 
+        String addressField = addressfield.getText();
+        String fax_numberField = fax_numberfield.getText();
+
+        Shop shop1;
+
+        try {
+            if(!addressField.equals("") && !fax_numberField.equals("")) {
+                shop1 = new Shop(addressField, Integer.parseInt(fax_numberField));
+                shop1.insertShop();
+                changeViewer();
+            }
+            else {
+                animation1.playAnimation();
+                animation2.playAnimation();
+            }
+        }
+        catch (Exception e) {
+            animation1.playAnimation();
+            animation2.playAnimation();
+        }
     }
 
     @FXML
@@ -135,16 +176,50 @@ public class TableShop implements Initializable {
 
     @FXML
     void update(ActionEvent event) {
+        Animation animation1 = new Animation(addressfield);
+        Animation animation2 = new Animation(fax_numberfield);
+        Animation animation5 = new Animation(confidentiality_levelfield);
+        Animation animation6 = new Animation(idupdate);
 
-    }
+        String addressField = addressfield.getText();
+        String fax_numberField = fax_numberfield.getText();
+        String confidentiality_levelField = confidentiality_levelfield.getText();
+        String idUpdate = idupdate.getText();
 
-    @FXML
-    void initialize() {
-
+        try {
+            if(!idUpdate.equals("")) {
+                if (!addressField.equals("")) {
+                    Objects.requireNonNull(Shop.selectShopById(Integer.parseInt(idUpdate))).updateShopST("address", addressField);
+                }
+                if (!fax_numberField.equals("")) {
+                    Objects.requireNonNull(Shop.selectShopById(Integer.parseInt(idUpdate))).updateShopDig("fax_number", fax_numberField);
+                }
+                if (!confidentiality_levelField.equals("")) {
+                    Objects.requireNonNull(Shop.selectShopById(Integer.parseInt(idUpdate))).updateShopDig("confidentiality_level", confidentiality_levelField);
+                }
+                changeViewer();
+            }
+            else {
+                animation1.playAnimation();
+                animation2.playAnimation();
+                animation5.playAnimation();
+                animation6.playAnimation();
+            }
+        }
+        catch (Exception e) {
+            animation1.playAnimation();
+            animation2.playAnimation();
+            animation5.playAnimation();
+            animation6.playAnimation();
+        }
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        changeViewer();
+    }
+
+    public void changeViewer() {
         id_of_shop.setCellValueFactory(new PropertyValueFactory<>("id_of_shop"));
         address.setCellValueFactory(new PropertyValueFactory<>("address"));
         fax_number.setCellValueFactory(new PropertyValueFactory<>("fax_number"));

@@ -1,6 +1,7 @@
 package Controller;
 
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 import Animation.Animation;
@@ -72,16 +73,15 @@ public class Profile {
     }
 
     @FXML
-    void savepassword(ActionEvent event) {
+    void savepassword(ActionEvent event) throws SQLException {
         Animation animationCurPassword = new Animation(curpassword);
         Animation animationNewPassword = new Animation(newpassword);
 
         String currentPassword = User.makeMD5(curpassword.getText());
-        System.out.println(currentPassword);
-        System.out.println(User.getInstance().getPassword());
         String newPassword = User.makeMD5(newpassword.getText());
+
         if (currentPassword.equals(User.getInstance().getPassword())) {
-            User.getInstance().updateUser("password", newPassword);
+            User.getInstance().updatePassword(newPassword);
         }
         else {
             animationCurPassword.playAnimation();
@@ -90,16 +90,16 @@ public class Profile {
     }
 
     @FXML
-    void saveusername(ActionEvent event) {
+    void saveusername(ActionEvent event) throws SQLException {
         Animation animationCurUsername = new Animation(curusername);
         Animation animationNewUsername = new Animation(newusername);
 
         String currentUsername = curusername.getText();
-        System.out.println(currentUsername);
-        System.out.println(User.getInstance().getUsername());
         String newUsername = newusername.getText();
-        if (currentUsername.equals(User.getInstance().getUsername())) {
-            User.getInstance().updateUser("username", newUsername);
+
+
+        if (currentUsername.equals(User.getInstance().getUsername()) && !newUsername.equals("")) {
+            User.getInstance().updateName(newUsername);
         }
         else {
             animationCurUsername.playAnimation();

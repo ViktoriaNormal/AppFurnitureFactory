@@ -1,10 +1,12 @@
 package Controller;
 
 import java.net.URL;
+import java.sql.Date;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
-import Service.Order;
-import Service.PieceOfFurniture;
+import Animation.Animation;
+import Service.*;
 import com.example.demo.HelloApplication;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -78,6 +80,9 @@ public class TablePiece implements Initializable {
     private Button piece;
 
     @FXML
+    private TextField idupdate;
+
+    @FXML
     private TableColumn<?, ?> piece_type;
 
     @FXML
@@ -113,7 +118,18 @@ public class TablePiece implements Initializable {
 
     @FXML
     void delete(ActionEvent event) {
+        Animation animationPassword = new Animation(id_of_piecetodelete);
 
+        String idDel = id_of_piecetodelete.getText();
+        PieceOfFurniture pieceOfFurniture = PieceOfFurniture.selectPieceOfFurnitureById(Integer.parseInt(idDel));
+        if(pieceOfFurniture != null) {
+            pieceOfFurniture.deletePieceOfFurniture();
+
+            changeViewer();
+        }
+        else {
+            animationPassword.playAnimation();
+        }
     }
 
     @FXML
@@ -123,7 +139,39 @@ public class TablePiece implements Initializable {
 
     @FXML
     void insert(ActionEvent event) {
+        Animation animation1 = new Animation(piece_typefield);
+        Animation animation2 = new Animation(article_numberfield);
+        Animation animation3 = new Animation(pricefield);
+        Animation animation4 = new Animation(id_linefield);
 
+        String piece_typeField = piece_typefield.getText();
+        String article_numberField = article_numberfield.getText();
+        String priceField = pricefield.getText();
+        String id_lineField = id_linefield.getText();
+
+        PieceOfFurniture pieceOfFurniture;
+
+        try {
+            if(!piece_typeField.equals("") && !article_numberField.equals("") && !priceField.equals("") && !id_lineField.equals("")) {
+                pieceOfFurniture = new PieceOfFurniture(piece_typeField, Integer.parseInt(article_numberField),
+                        Integer.parseInt(priceField),
+                        Objects.requireNonNull(LineOfFurniture.selectLineOfFurnitureById(Integer.parseInt(id_lineField))));
+                pieceOfFurniture.insertPieceOfFurniture();
+                changeViewer();
+            }
+            else {
+                animation1.playAnimation();
+                animation2.playAnimation();
+                animation3.playAnimation();
+                animation4.playAnimation();
+            }
+        }
+        catch (Exception e) {
+            animation1.playAnimation();
+            animation2.playAnimation();
+            animation3.playAnimation();
+            animation4.playAnimation();
+        }
     }
 
     @FXML
@@ -163,7 +211,56 @@ public class TablePiece implements Initializable {
 
     @FXML
     void update(ActionEvent event) {
+        Animation animation1 = new Animation(piece_typefield);
+        Animation animation2 = new Animation(article_numberfield);
+        Animation animation3 = new Animation(pricefield);
+        Animation animation4 = new Animation(id_linefield);
+        Animation animation5 = new Animation(confidentiality_levelfield);
+        Animation animation6 = new Animation(idupdate);
 
+        String piece_typeField = piece_typefield.getText();
+        String article_numberField = article_numberfield.getText();
+        String priceField = pricefield.getText();
+        String id_lineField = id_linefield.getText();
+        String confidentiality_levelField = confidentiality_levelfield.getText();
+        String idUpdate = idupdate.getText();
+
+        try {
+            if(!idUpdate.equals("")) {
+                if (!piece_typeField.equals("")) {
+                    Objects.requireNonNull(Objects.requireNonNull(PieceOfFurniture.selectPieceOfFurnitureById((Integer.parseInt(idUpdate)))).updatePieceOfFurnitureST("piece_type", piece_typeField));
+                }
+                if (!article_numberField.equals("")) {
+                    Objects.requireNonNull(PieceOfFurniture.selectPieceOfFurnitureById(Integer.parseInt(idUpdate))).updatePieceOfFurniture("article_number", article_numberField);
+                }
+                if (!priceField.equals("")) {
+                    Objects.requireNonNull(PieceOfFurniture.selectPieceOfFurnitureById(Integer.parseInt(idUpdate))).updatePieceOfFurniture("price", priceField);
+                }
+                if (!id_lineField.equals("")) {
+                    Objects.requireNonNull(PieceOfFurniture.selectPieceOfFurnitureById(Integer.parseInt(idUpdate))).updatePieceOfFurniture("id_line", id_lineField);
+                }
+                if (!confidentiality_levelField.equals("")) {
+                    Objects.requireNonNull(PieceOfFurniture.selectPieceOfFurnitureById(Integer.parseInt(idUpdate))).updatePieceOfFurniture("confidentiality_level", confidentiality_levelField);
+                }
+                changeViewer();
+            }
+            else {
+                animation1.playAnimation();
+                animation2.playAnimation();
+                animation3.playAnimation();
+                animation4.playAnimation();
+                animation5.playAnimation();
+                animation6.playAnimation();
+            }
+        }
+        catch (Exception e) {
+            animation1.playAnimation();
+            animation2.playAnimation();
+            animation3.playAnimation();
+            animation4.playAnimation();
+            animation5.playAnimation();
+            animation6.playAnimation();
+        }
     }
 
     @FXML
@@ -173,6 +270,10 @@ public class TablePiece implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        changeViewer();
+    }
+
+    public void changeViewer() {
         id_of_piece.setCellValueFactory(new PropertyValueFactory<>("id_of_piece"));
         piece_type.setCellValueFactory(new PropertyValueFactory<>("piece_type"));
         article_number.setCellValueFactory(new PropertyValueFactory<>("article_number"));

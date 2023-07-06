@@ -36,13 +36,22 @@ public class PieceOfFurniture {
         this.confidentiality_level = 0;
     }
 
+    public PieceOfFurniture(String piece_type, int article_number, int price, LineOfFurniture lineOfFurniture) {
+        this.id_of_piece = id_of_piece;
+        this.piece_type = piece_type;
+        this.article_number = article_number;
+        this.price = price;
+        this.id_line = lineOfFurniture.getId_line();
+        this.confidentiality_level = 0;
+    }
+
     public PieceOfFurniture insertPieceOfFurniture() {
         String query = "INSERT INTO piece_of_furniture (piece_type, article_number, price, id_line) VALUES (?, ?, ?, ?)";
         try (PreparedStatement statement = Connector.getConnection().prepareStatement(query)) {
-            statement.setString(2, getPiece_type());
-            statement.setInt(3, getArticle_number());
-            statement.setInt(4, getPrice());
-            statement.setInt(5, getId_line());
+            statement.setString(1, getPiece_type());
+            statement.setInt(2, getArticle_number());
+            statement.setInt(3, getPrice());
+            statement.setInt(4, getId_line());
             statement.executeUpdate();
         }
         catch (SQLException e) {
@@ -65,6 +74,30 @@ public class PieceOfFurniture {
 
     public PieceOfFurniture updatePieceOfFurniture(String column_name, Object new_value) {
         String query = "UPDATE piece_of_furniture SET " + column_name + " = " + new_value + " WHERE id_of_piece = " + getId_of_piece();
+        try (PreparedStatement statement = Connector.getConnection().prepareStatement(query)) {
+            statement.executeUpdate(query);
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            switch (column_name) {
+                case "piece_type" -> setPiece_type((String) new_value);
+                case "article_number" -> setArticle_number((int) new_value);
+                case "price" -> setPrice((int) new_value);
+                case "id_line" -> setId_line(Objects.requireNonNull(LineOfFurniture.selectLineOfFurnitureById((int) new_value)));
+            }
+        }
+        catch (Exception e) {
+            System.out.println("Произошла ошибка: " + e.getMessage());
+        }
+
+        return this;
+    }
+
+    public PieceOfFurniture updatePieceOfFurnitureST(String column_name, Object new_value) {
+        String query = "UPDATE piece_of_furniture SET " + column_name + " = '" + new_value + "' WHERE id_of_piece = " + getId_of_piece();
         try (PreparedStatement statement = Connector.getConnection().prepareStatement(query)) {
             statement.executeUpdate(query);
         }

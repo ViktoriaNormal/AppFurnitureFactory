@@ -92,5 +92,6 @@
          </font>
       </Label>
       <TextField fx:id="id_of_piece" layoutX="537.0" layoutY="337.0" promptText="enter id_of_piece" />
+      <TextField fx:id="idUpdate" layoutX="478.0" layoutY="460.0" prefHeight="26.0" prefWidth="63.0" promptText="id_of_order" />
    </children>
 </AnchorPane>

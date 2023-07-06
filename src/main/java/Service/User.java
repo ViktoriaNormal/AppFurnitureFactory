@@ -37,18 +37,6 @@ public class User {
         this.username = user_name;
         this.password = password;
         this.availability_level = 0;
-        int idUser = 0;
-        this.insertUser();
-        String query = "SELECT id_user FROM users WHERE username = " + user_name + " AND password = " + password;
-        try (PreparedStatement statement = Connector.getConnection().prepareStatement(query)) {
-            ResultSet resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-                idUser = resultSet.getInt("id_user");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        id_user = idUser;
     }
 
     public static void login(User user) {
@@ -86,7 +74,7 @@ public class User {
     }
 
     public User updateUser(String column_name, String new_value) {
-        String query = "UPDATE users SET '" + column_name + "' = " + new_value + " WHERE id_user = " + getId_user();
+        String query = "UPDATE users SET " + column_name + " = '" + new_value + "' WHERE id_user = " + getId_user();
         try (PreparedStatement statement = Connector.getConnection().prepareStatement(query)) {
             statement.executeUpdate(query);
         }
@@ -105,6 +93,22 @@ public class User {
         }
 
         return this;
+    }
+
+    public void updateName(String newName) throws SQLException {
+        String username = getUsername();
+        String password = getPassword();
+        Statement statement = Connector.getConnection().createStatement();
+        String query = "UPDATE users SET username = '" + newName + "' WHERE username = '" + username + "' AND password = '" + password + "';";
+        statement.executeUpdate(query);
+    }
+    public void updatePassword(String newPassword) throws SQLException {
+        String username = getUsername();
+        String password = getPassword();
+        newPassword = makeMD5(newPassword);
+        Statement statement = Connector.getConnection().createStatement();
+        String query = "UPDATE users SET password = '" + newPassword + "' WHERE username = '" + username + "' AND password = '" + password + "';";
+        statement.executeUpdate(query);
     }
 
     public static ObservableList<User> selectAllUsers() {

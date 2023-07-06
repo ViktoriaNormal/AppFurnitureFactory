@@ -97,6 +97,7 @@
                </font>
             </Label>
             <TextField fx:id="id_of_component" layoutX="537.0" layoutY="337.0" onAction="#id_of_component" promptText="id_of_component" />
+            <TextField fx:id="idupdate" layoutX="473.0" layoutY="460.0" prefHeight="26.0" prefWidth="67.0" promptText="id_of_piece" />
          </children>
       </AnchorPane>
    </children>

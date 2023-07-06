@@ -28,11 +28,17 @@ public class Shop {
         this.confidentiality_level = 0;
     }
 
+    public Shop(String address, int fax_number) {
+        this.address = address;
+        this.fax_number = fax_number;
+        this.confidentiality_level = 0;
+    }
+
     public Shop insertShop() {
         String query = "INSERT INTO shop (address, fax_number) VALUES (?, ?)";
         try (PreparedStatement statement = Connector.getConnection().prepareStatement(query)) {
-            statement.setString(2, getAddress());
-            statement.setInt(3, getFax_number());
+            statement.setString(1, getAddress());
+            statement.setInt(2, getFax_number());
             statement.executeUpdate();
         }
         catch (SQLException e) {
@@ -53,7 +59,7 @@ public class Shop {
         return null;
     }
 
-    public Shop updateShop(String column_name, Object new_value) {
+    public Shop updateShopDig(String column_name, Object new_value) {
         String query = "UPDATE shop SET " + column_name + " = " + new_value + " WHERE id_of_shop = " + getId_of_shop();
         try (PreparedStatement statement = Connector.getConnection().prepareStatement(query)) {
             statement.executeUpdate(query);
@@ -63,9 +69,29 @@ public class Shop {
         }
 
         try {
-            switch (column_name) {
-                case "address" -> setAddress((String) new_value);
-                case "fax_number" -> setFax_number((int) new_value);
+            if ("fax_number".equals(column_name)) {
+                setFax_number((int) new_value);
+            }
+        }
+        catch (Exception e) {
+            System.out.println("Произошла ошибка: " + e.getMessage());
+        }
+
+        return this;
+    }
+
+    public Shop updateShopST(String column_name, Object new_value) {
+        String query = "UPDATE shop SET " + column_name + " = '" + new_value + "' WHERE id_of_shop = " + getId_of_shop();
+        try (PreparedStatement statement = Connector.getConnection().prepareStatement(query)) {
+            statement.executeUpdate(query);
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            if ("address".equals(column_name)) {
+                setAddress((String) new_value);
             }
         }
         catch (Exception e) {
