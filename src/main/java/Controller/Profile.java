@@ -3,6 +3,7 @@ package Controller;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import Animation.Animation;
 import Service.User;
 import com.example.demo.HelloApplication;
 import javafx.event.ActionEvent;
@@ -70,34 +71,45 @@ public class Profile {
         HelloApplication.changeScene("/Viewer/Authorization.fxml");
     }
 
-    public void submitChange() throws NoSuchAlgorithmException, InvalidKeySpecException, SQLException {
-        String password = passwordText.getText();    String change = changeText.getText();    passwordText.setText("");    changeText.setText("");    if (!change.matches("[A-Za-z0-9]+")) {
-            errorLabel.setText("Только латинские букв или цифры");        return;    }
-        if (!userService.passwordHashing(password).equals(user.getPassword())) {
-            errorLabel.setText("Неправильный пароль");        return;    }
-        if (passwordChange) {
-            userService.changePassword(user, change);        user.setPassword(userService.passwordHashing(change));    } else {
-            if (userService.exists(change)) {
-                errorLabel.setText("Данный логин занят");            return;        }
-            userService.changeName(user, change);        user.setUsername(change);    }
-        errorLabel.setText("");    changeSuccessLabel.setVisible(true);    showInfo();}
     @FXML
     void savepassword(ActionEvent event) {
+        Animation animationCurPassword = new Animation(curpassword);
+        Animation animationNewPassword = new Animation(newpassword);
 
+        String currentPassword = User.makeMD5(curpassword.getText());
+        System.out.println(currentPassword);
+        System.out.println(User.getInstance().getPassword());
+        String newPassword = User.makeMD5(newpassword.getText());
+        if (currentPassword.equals(User.getInstance().getPassword())) {
+            User.getInstance().updateUser("password", newPassword);
+        }
+        else {
+            animationCurPassword.playAnimation();
+            animationNewPassword.playAnimation();
+        }
     }
 
     @FXML
     void saveusername(ActionEvent event) {
+        Animation animationCurUsername = new Animation(curusername);
+        Animation animationNewUsername = new Animation(newusername);
+
         String currentUsername = curusername.getText();
+        System.out.println(currentUsername);
+        System.out.println(User.getInstance().getUsername());
         String newUsername = newusername.getText();
-        if (!currentUsername.equals(User.getInstance().getUsername())) {
+        if (currentUsername.equals(User.getInstance().getUsername())) {
             User.getInstance().updateUser("username", newUsername);
+        }
+        else {
+            animationCurUsername.playAnimation();
+            animationNewUsername.playAnimation();
         }
     }
 
     @FXML
     void tocomponent(ActionEvent event) {
-
+        HelloApplication.changeScene("/Viewer/TableComponent.fxml");
     }
 
     @FXML

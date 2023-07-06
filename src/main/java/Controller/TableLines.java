@@ -1,17 +1,22 @@
 package Controller;
 
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 import Service.Component;
+import Service.LineOfFurniture;
 import com.example.demo.HelloApplication;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 
-public class TableLines {
+public class TableLines implements Initializable {
 
     @FXML
     private ResourceBundle resources;
@@ -26,7 +31,10 @@ public class TableLines {
     private Button component;
 
     @FXML
-    private TableColumn<?, ?> confidentiality_level;
+    private TableView<LineOfFurniture> tableLines;
+
+    @FXML
+    private TableColumn<LineOfFurniture, Integer> confidentiality_level;
 
     @FXML
     private TextField confidentiality_levelfield;
@@ -35,7 +43,7 @@ public class TableLines {
     private Button delete;
 
     @FXML
-    private TableColumn<?, ?> id_line;
+    private TableColumn<LineOfFurniture, Integer> id_line;
 
     @FXML
     private TextField idtodelete;
@@ -47,7 +55,7 @@ public class TableLines {
     private Button line;
 
     @FXML
-    private TableColumn<?, ?> name;
+    private TableColumn<LineOfFurniture, String> name;
 
     @FXML
     private TextField namefield;
@@ -127,6 +135,15 @@ public class TableLines {
 
     @FXML
     void initialize() {
+    }
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        id_line.setCellValueFactory(new PropertyValueFactory<>("id_line"));
+        name.setCellValueFactory(new PropertyValueFactory<>("name"));
+        confidentiality_level.setCellValueFactory(new PropertyValueFactory<>("confidentiality_level"));
+
+        tableLines.setItems(LineOfFurniture.selectAllLinesOfFurniture());
     }
 
 }

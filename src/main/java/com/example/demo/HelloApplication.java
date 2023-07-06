@@ -41,7 +41,10 @@ public class HelloApplication extends Application {
     public static void main(String[] args) throws SQLException {
 
         Connector connector = new Connector();
-        System.out.println(Component.selectAllComponents());
+//        System.out.println(Component.selectAllComponents());
+//        User user = new User("login", "login");
+//        user.insertUser();
+//        System.out.println(user.updateUser());
         launch();
     }
 }

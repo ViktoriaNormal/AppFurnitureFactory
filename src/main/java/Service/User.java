@@ -37,6 +37,18 @@ public class User {
         this.username = user_name;
         this.password = password;
         this.availability_level = 0;
+        int idUser = 0;
+        this.insertUser();
+        String query = "SELECT id_user FROM users WHERE username = " + user_name + " AND password = " + password;
+        try (PreparedStatement statement = Connector.getConnection().prepareStatement(query)) {
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                idUser = resultSet.getInt("id_user");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        id_user = idUser;
     }
 
     public static void login(User user) {
@@ -73,8 +85,8 @@ public class User {
         return null;
     }
 
-    public User updateUser(String column_name, Object new_value) {
-        String query = "UPDATE users SET " + column_name + " = " + new_value + " WHERE id_user = " + getId_user();
+    public User updateUser(String column_name, String new_value) {
+        String query = "UPDATE users SET '" + column_name + "' = " + new_value + " WHERE id_user = " + getId_user();
         try (PreparedStatement statement = Connector.getConnection().prepareStatement(query)) {
             statement.executeUpdate(query);
         }
@@ -84,9 +96,8 @@ public class User {
 
         try {
             switch (column_name) {
-                case "username" -> setUsername((String) new_value);
-                case "password" -> setPassword((String) new_value);
-                case "availability_level" -> setAvailability_level((int) new_value);
+                case "username" -> setUsername(new_value);
+                case "password" -> setPassword(new_value);
             }
         }
         catch (Exception e) {
@@ -95,30 +106,6 @@ public class User {
 
         return this;
     }
-
-//    public static User[] selectAllUsers() {
-//        String query = "SELECT * FROM users";
-//        try {
-//            PreparedStatement statement = Connector.getConnection().prepareStatement(query);
-//            ResultSet resultSet = statement.executeQuery(query);
-//            ResultSetMetaData metaData = resultSet.getMetaData();
-//            int columnCount = metaData.getColumnCount();
-//            User[] users = new User[columnCount];
-//            int index = 0;
-//            while (resultSet.next()) {
-//                int idUser = resultSet.getInt("id_user");
-//                String username = resultSet.getString("username");
-//                String password = resultSet.getString("password");
-//                int level = resultSet.getInt("availability_level");
-//                users[index++] = new User(idUser, username, password, level);
-//            }
-//            return users;
-//        }
-//        catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//        return null;
-//    }
 
     public static ObservableList<User> selectAllUsers() {
         String query = "SELECT * FROM users";

@@ -3,14 +3,19 @@ package Controller;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import Service.Shop;
+import Service.User;
 import com.example.demo.HelloApplication;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 
-public class TableUser {
+public class TableUser implements Initializable {
 
     @FXML
     private ResourceBundle resources;
@@ -31,7 +36,19 @@ public class TableUser {
     private Button delete;
 
     @FXML
-    private TableColumn<?, ?> id_user;
+    private TableColumn<User, Integer> id_user;
+
+    @FXML
+    private TableColumn<User, Integer> availability_level;
+
+    @FXML
+    private TableColumn<User, String> password;
+
+    @FXML
+    private TableView<User> tableUsers;
+
+    @FXML
+    private TableColumn<User, String> username;
 
     @FXML
     private TextField id_usertodelete;
@@ -124,7 +141,16 @@ public class TableUser {
     @FXML
     void initialize() {
 
+    }
 
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        id_user.setCellValueFactory(new PropertyValueFactory<>("id_user"));
+        username.setCellValueFactory(new PropertyValueFactory<>("username"));
+        password.setCellValueFactory(new PropertyValueFactory<>("password"));
+        availability_level.setCellValueFactory(new PropertyValueFactory<>("availability_level"));
+
+        tableUsers.setItems(User.selectAllUsers());
     }
 
 }

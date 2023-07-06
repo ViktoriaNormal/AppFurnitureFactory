@@ -3,14 +3,19 @@ package Controller;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import Service.Order;
+import Service.PieceOfFurniture;
 import com.example.demo.HelloApplication;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 
-public class TablePiece {
+public class TablePiece implements Initializable {
 
     @FXML
     private ResourceBundle resources;
@@ -35,6 +40,21 @@ public class TablePiece {
 
     @FXML
     private Button delete;
+
+    @FXML
+    private TableColumn<PieceOfFurniture, Integer> article_number;
+
+    @FXML
+    private TableColumn<PieceOfFurniture, Integer> confidentiality_level;
+
+    @FXML
+    private TableColumn<PieceOfFurniture, Integer> id_line;
+
+    @FXML
+    private TableColumn<PieceOfFurniture, Integer> price;
+
+    @FXML
+    private TableView<PieceOfFurniture> tablePieces;
 
     @FXML
     private TextField id_linefield;
@@ -149,7 +169,18 @@ public class TablePiece {
     @FXML
     void initialize() {
 
+    }
 
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        id_of_piece.setCellValueFactory(new PropertyValueFactory<>("id_of_piece"));
+        piece_type.setCellValueFactory(new PropertyValueFactory<>("piece_type"));
+        article_number.setCellValueFactory(new PropertyValueFactory<>("article_number"));
+        price.setCellValueFactory(new PropertyValueFactory<>("price"));
+        id_line.setCellValueFactory(new PropertyValueFactory<>("id_line"));
+        confidentiality_level.setCellValueFactory(new PropertyValueFactory<>("confidentiality_level"));
+
+        tablePieces.setItems(PieceOfFurniture.selectAllPiecesOfFurniture());
     }
 
 }

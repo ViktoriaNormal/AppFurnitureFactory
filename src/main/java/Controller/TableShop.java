@@ -3,14 +3,19 @@ package Controller;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import Service.PieceOfFurniture;
+import Service.Shop;
 import com.example.demo.HelloApplication;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 
-public class TableShop {
+public class TableShop implements Initializable {
 
     @FXML
     private ResourceBundle resources;
@@ -20,6 +25,18 @@ public class TableShop {
 
     @FXML
     private TextField addressfield;
+
+    @FXML
+    private TableColumn<Shop, String> address;
+
+    @FXML
+    private TableColumn<Shop, Integer> confidentiality_level;
+
+    @FXML
+    private TableColumn<Shop, Integer> fax_number;
+
+    @FXML
+    private TableView<Shop> tableShops;
 
     @FXML
     private Button close;
@@ -124,7 +141,16 @@ public class TableShop {
     @FXML
     void initialize() {
 
+    }
 
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        id_of_shop.setCellValueFactory(new PropertyValueFactory<>("id_of_shop"));
+        address.setCellValueFactory(new PropertyValueFactory<>("address"));
+        fax_number.setCellValueFactory(new PropertyValueFactory<>("fax_number"));
+        confidentiality_level.setCellValueFactory(new PropertyValueFactory<>("confidentiality_level"));
+
+        tableShops.setItems(Shop.selectAllShops());
     }
 
 }

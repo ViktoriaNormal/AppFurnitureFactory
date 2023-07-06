@@ -173,27 +173,6 @@ public class TableComponent implements Initializable {
         }
     }
 
-//            String query = "SELECT * FROM users";
-//            PreparedStatement statement = connection.prepareStatement(query);
-//
-//            ResultSet resultSet = statement.executeQuery();
-//
-//            while (resultSet.next()) {
-//                int id = resultSet.getInt("id");
-//                String login = resultSet.getString("login");
-//                String password = resultSet.getString("password");
-//                int role = resultSet.getInt("role");
-//
-//                carTable.getItems().addAll(new User(id,login,password,role));
-//            }
-//
-//            connection.close();
-
-//        id.setCellValueFactory(new PropertyValueFactory<>("id"));
-//        login.setCellValueFactory(new PropertyValueFactory<>("login"));
-//        password.setCellValueFactory(new PropertyValueFactory<>("password"));
-//        role.setCellValueFactory(new PropertyValueFactory<>("role"));
-
 
 
 }
